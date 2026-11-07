@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Options · fonts + skills</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&family=Pixelify+Sans:wght@600&family=Rubik:wght@500;700&family=Jersey+10&family=Space+Grotesk:wght@500;700&family=Silkscreen&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#18181a;--panel:#313233;--panel2:#3c3d3f;--edge:#1e1e1f;--hi:#5a5b5c;--ink:#f2f2f2;--muted:#b1b2b5;--faint:#7c7d80;--green:#3c8527;--green-lo:#1d4d13;--green-hi:#52a535}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Noto Sans",system-ui,sans-serif;padding:40px 28px 80px}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font:700 30px "Noto Sans";margin:0 0 6px}
+.sub{color:var(--muted);margin:0 0 34px}
+.group{margin:0 0 60px}
+.group > h2{font:700 13px "Noto Sans";letter-spacing:.12em;text-transform:uppercase;color:var(--green-hi);margin:0 0 16px}
+.grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.panel{background:var(--panel);border:2px solid var(--edge);box-shadow:inset 0 2px 0 var(--hi),0 6px 0 var(--edge)}
+.opt{padding:22px;position:relative}
+.tag{position:absolute;top:12px;right:12px;font:700 11px "Noto Sans";letter-spacing:.08em;color:var(--faint)}
+.tag.rec{color:#55ff55}
+.opt .name{font:600 13px "Noto Sans";color:var(--faint);margin-bottom:14px}
+.opt h3{margin:0 0 8px;font-size:34px;line-height:1.02}
+.opt p{color:var(--muted);margin:0 0 16px;font-size:15px}
+.btn{display:inline-flex;align-items:center;min-height:42px;padding:0 18px;color:#fff;background:var(--green);border:2px solid var(--green-lo);box-shadow:inset 0 -5px 0 var(--green-lo),inset 0 2px 0 #ffffff33;font-size:15px}
+.kick{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--green-hi);margin-bottom:6px;display:block}
+.pick{all:unset;cursor:pointer;display:block;margin-top:18px;font:600 14px "Noto Sans";color:#5ee8e0}
+.pick:hover{text-decoration:underline}
+
+/* font specimens */
+.f0 h3,.f0 .btn,.f0 .kick{font-family:"Pixelify Sans";font-weight:600}
+.f1 h3{font:800 34px/1.02 "Noto Sans";letter-spacing:-.02em}.f1 .btn{font:700 15px "Noto Sans"}.f1 .kick{font-family:Silkscreen}
+.f2 h3{font:700 34px/1.02 Rubik;letter-spacing:-.01em}.f2 .btn{font:700 15px Rubik}.f2 .kick{font-family:Rubik;font-weight:700}
+.f3 h3{font:400 46px/.95 "Jersey 10";letter-spacing:.01em}.f3 .btn{font:400 21px "Jersey 10";letter-spacing:.03em}.f3 .kick{font:400 17px "Jersey 10";letter-spacing:.08em}
+.f4 h3{font:700 34px/1.02 "Space Grotesk";letter-spacing:-.03em}.f4 .btn{font:700 15px "Space Grotesk"}.f4 .kick{font-family:Silkscreen}
+
+/* skill option shared */
+.slot{width:44px;height:44px;background:#1e1e1f;box-shadow:inset 3px 3px 0 #0d0d0e,inset -3px -3px 0 #4a4b4d;display:grid;place-items:center;flex:none}
+.slot canvas{width:28px;height:28px;image-rendering:pixelated}
+.cat{font:700 12px "Noto Sans";letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:14px 0 8px}
+
+/* S1 creative tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.tabs button{all:unset;cursor:pointer;padding:7px 12px;font:600 13px "Noto Sans";background:var(--panel2);border:2px solid var(--edge);color:var(--muted)}
+.tabs button.on{background:var(--green);border-color:var(--green-lo);color:#fff}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;min-height:172px;align-content:start}
+.tile{display:flex;align-items:center;gap:10px;padding:6px 10px 6px 6px;background:var(--panel2);border:2px solid var(--edge);font:600 14px "Noto Sans"}
+.tile:hover{border-color:#fff}
+
+/* S2 item frames */
+.wall{padding:18px;background-size:56px 56px;image-rendering:pixelated;position:relative}
+.wall:before{content:"";position:absolute;inset:0;background:#0007}
+.frames{position:relative;display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:16px 10px}
+.frame{display:flex;flex-direction:column;align-items:center;gap:6px}
+.frame .fr{width:60px;height:60px;display:grid;place-items:center;background:#8a6a3a;box-shadow:inset 0 0 0 4px #6b5030,inset 0 0 0 6px #4a3520,0 4px 0 #0006}
+.frame .fr canvas{width:36px;height:36px;image-rendering:pixelated}
+.sign{font:600 12px "Noto Sans";color:#1d1d1d;background:#c4a06a;padding:1px 7px;box-shadow:0 2px 0 #6b5030;text-align:center;max-width:96px;line-height:1.3}
+
+/* S3 enchanted books */
+.books{display:grid;gap:12px}
+.book{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start;padding:12px 14px;background:#100010f2;border:2px solid #100010;box-shadow:inset 0 0 0 2px #3b0f8a}
+.book .t{font:700 15px "Noto Sans";color:#ffff55}
+.book .l{color:#c9c9c9;font-size:14px;line-height:1.5}
+.book .l b{color:#b48cff;font-weight:600}
+</style>
+</head>
+<body><div class="wrap">
+<h1>Pick a font and a skills layout</h1>
+<p class="sub">Each option uses the same panels, buttons and text, so the only thing changing is the part you're picking.</p>
+
+<div class="group">
+<h2>1 · Fonts for headings and buttons</h2>
+<div class="grid">
+  <div class="panel opt f0"><span class="tag">NOW</span><div class="name">Current · Pixelify Sans</div><span class="kick">Crafting</span><h3>What I've built</h3><p>Body text stays Noto Sans in every option. It's what minecraft.net uses.</p><span class="btn">Hire me</span>
+    <button class="pick" data-choice="Font: keep Pixelify Sans">Keep this →</button></div>
+  <div class="panel opt f1"><span class="tag rec">RECOMMENDED</span><div class="name">A · Noto Sans ExtraBold + pixel tags</div><span class="kick">Crafting</span><h3>What I've built</h3><p>Body text stays Noto Sans in every option. It's what minecraft.net uses.</p><span class="btn">Hire me</span>
+    <button class="pick" data-choice="Font: option A (Noto Sans ExtraBold + pixel tags)">Pick A →</button></div>
+  <div class="panel opt f2"><span class="tag">B</span><div class="name">B · Rubik (chunky, rounded)</div><span class="kick">Crafting</span><h3>What I've built</h3><p>Body text stays Noto Sans in every option. It's what minecraft.net uses.</p><span class="btn">Hire me</span>
+    <button class="pick" data-choice="Font: option B (Rubik)">Pick B →</button></div>
+  <div class="panel opt f3"><span class="tag">C</span><div class="name">C · Jersey 10 (sleek pixel)</div><span class="kick">Crafting</span><h3>What I've built</h3><p>Body text stays Noto Sans in every option. It's what minecraft.net uses.</p><span class="btn">Hire me</span>
+    <button class="pick" data-choice="Font: option C (Jersey 10)">Pick C →</button></div>
+  <div class="panel opt f4"><span class="tag">D</span><div class="name">D · Space Grotesk (techy)</div><span class="kick">Crafting</span><h3>What I've built</h3><p>Body text stays Noto Sans in every option. It's what minecraft.net uses.</p><span class="btn">Hire me</span>
+    <button class="pick" data-choice="Font: option D (Space Grotesk)">Pick D →</button></div>
+</div>
+</div>
+
+<div class="group">
+<h2>2 · Skills section</h2>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(340px,1fr))">
+
+  <div class="panel opt"><span class="tag rec">RECOMMENDED</span><div class="name">1 · Creative-mode inventory tabs</div>
+    <div class="tabs" id="tabs"></div><div class="tiles" id="tiles"></div>
+    <p style="margin:14px 0 0">Real tech logos redrawn as pixel icons, with the name always visible. Tabs work like the creative inventory.</p>
+    <button class="pick" data-choice="Skills: option 1 (creative-mode tabs with labeled pixel logos)">Pick 1 →</button></div>
+
+  <div class="panel opt"><span class="tag">2</span><div class="name">2 · Item frames on a wall</div>
+    <div class="wall" data-tex="planks"><div class="frames" id="frames"></div></div>
+    <p style="margin:14px 0 0">Each core skill hangs in an item frame with a sign under it. The most visual option, but it fits fewer skills (core 12 here).</p>
+    <button class="pick" data-choice="Skills: option 2 (item frames with signs)">Pick 2 →</button></div>
+
+  <div class="panel opt"><span class="tag">3</span><div class="name">3 · Enchanted books (text-first)</div>
+    <div class="books" id="books"></div>
+    <p style="margin:14px 0 0">One enchanted book per category, with skills listed as its enchantments. The easiest to scan, with the least art.</p>
+    <button class="pick" data-choice="Skills: option 3 (enchanted books)">Pick 3 →</button></div>
+</div>
+</div>
+</div>
+
+<script>
+/* pixelate a real logo SVG into a 16x16 icon */
+const ICON={Python:'python',PyTorch:'pytorch',OpenCV:'opencv',Docker:'docker',Linux:'linux',Git:'git','Scikit-Learn':'scikitlearn',Pandas:'pandas',NumPy:'numpy','Blender API':'blender','C++':'cplusplus',Java:'openjdk',Bash:'gnubash',YOLO:'ultralytics',SAM:'meta',DINOv2:'meta',Jupyter:'jupyter'};
+const MONO={SQL:'#4f8de8','Grounding DINO':'#b07ee8',OCR:'#e2e2e2',Segmentation:'#41d06b','Photoshop scripting':'#31a8ff',Albumentations:'#f08a3a','Domain randomization':'#e5484d',Matplotlib:'#11557c',Seaborn:'#4c72b0','Label Studio':'#f75a2b',Unsloth:'#41d06b',AWS:'#ff9900'};
+function pix(name){const c=document.createElement('canvas');c.width=c.height=16;const x=c.getContext('2d');
+  if(ICON[name]){const im=new Image();im.onload=()=>{x.imageSmoothingEnabled=true;x.drawImage(im,1,1,14,14);
+    // harden alpha so it reads as pixel art
+    try{const d=x.getImageData(0,0,16,16);for(let i=3;i<d.data.length;i+=4)d.data[i]=d.data[i]>90?255:0;x.putImageData(d,0,0)}catch(e){}};im.src='icons/'+ICON[name]+'.svg'}
+  else{const col=MONO[name]||'#aaa';x.fillStyle=col;x.fillRect(2,2,12,12);x.fillStyle='#0005';x.fillRect(2,12,12,2);x.fillRect(12,2,2,12);x.fillStyle='#fff6';x.fillRect(2,2,12,2);
+    x.fillStyle='#fff';x.font='bold 9px monospace';x.textAlign='center';x.fillText(name.replace(/[^A-Za-z+]/g,'').slice(0,2).toUpperCase(),8,11)}
+  return c}
+const CATS={"Languages":["Python","SQL","C++","Java","Bash"],
+ "ML & data":["PyTorch","Scikit-Learn","Pandas","NumPy","Matplotlib","Seaborn"],
+ "Vision":["OpenCV","YOLO","SAM","Grounding DINO","OCR","Segmentation"],
+ "Synthetic data":["Blender API","Photoshop scripting","Albumentations","Domain randomization"],
+ "Tools":["Git","Docker","Linux","Label Studio","Unsloth","AWS"]};
+/* option 1 */
+const tabs=document.getElementById('tabs'),tiles=document.getElementById('tiles');
+function show(cat){[...tabs.children].forEach(b=>b.classList.toggle('on',b.textContent==cat));tiles.innerHTML='';
+  CATS[cat].forEach(n=>{const t=document.createElement('div');t.className='tile';const s=document.createElement('div');s.className='slot';s.appendChild(pix(n));t.appendChild(s);t.append(n);tiles.appendChild(t)})}
+Object.keys(CATS).forEach(c=>{const b=document.createElement('button');b.textContent=c;b.onclick=()=>show(c);tabs.appendChild(b)});show("Vision");
+/* option 2 */
+const fr=document.getElementById('frames');["Python","PyTorch","OpenCV","YOLO","SAM","Blender API","Docker","Linux","Git","NumPy","Pandas","Scikit-Learn"].forEach(n=>{
+  const f=document.createElement('div');f.className='frame';f.innerHTML='<div class="fr"></div><div class="sign">'+n+'</div>';f.firstChild.appendChild(pix(n));fr.appendChild(f)});
+/* option 3 */
+const bk=document.getElementById('books');const LV=["I","II","III"];
+Object.entries(CATS).forEach(([c,list])=>{const b=document.createElement('div');b.className='book';
+  const s=document.createElement('div');s.className='slot';s.appendChild(pix(list[0]));b.appendChild(s);
+  b.insertAdjacentHTML('beforeend',`<div><div class="t">Enchanted Book · ${c}</div><div class="l">${list.map(n=>'<b>'+n+'</b>').join(' · ')}</div></div>`);bk.appendChild(b)});
+/* planks texture for the wall */
+(()=>{let seed=61;const r=()=>((seed=Math.imul(seed^seed>>>15,2246822519)+0x9e3779b9|0)>>>0)/4294967296;const c=document.createElement('canvas');c.width=c.height=16;const x=c.getContext('2d');
+  for(let y=0;y<16;y++)for(let i=0;i<16;i++){x.fillStyle=y%4==3?'#6b5030':['#b8945f','#a88654','#c4a06a','#9c7a49'][r()*4|0];x.fillRect(i,y,1,1)}
+  document.querySelectorAll('[data-tex=planks]').forEach(e=>e.style.backgroundImage=`url(${c.toDataURL()})`)})();
+</script>
+</body>
+</html>

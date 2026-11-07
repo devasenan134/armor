@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Devasenan Murugan · ML / Computer Vision Engineer</title>
+<meta name="description" content="Devasenan Murugan, ML / Computer Vision engineer in Montreal. Synthetic data pipelines, detection and segmentation.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&family=Silkscreen&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#18181a;--bg2:#1f1f22;--panel:#313233;--panel2:#3c3d3f;--edge:#1e1e1f;--hi:#5a5b5c;--ink:#f2f2f2;--muted:#b1b2b5;--faint:#7c7d80;
+  --green:#3c8527;--green-hi:#52a535;--green-lo:#1d4d13;--gold:#ffcf3f;--aqua:#5ee8e0;--red:#e5484d;
+  --sky1:#0b1430;--sky2:#24305e;--glow:#5ee8e033;
+  --head:"Noto Sans",system-ui,sans-serif;--body:"Noto Sans",system-ui,sans-serif;--px:"Silkscreen",ui-monospace,monospace;
+}
+[data-theme=day]{
+  --bg:#eef0f3;--bg2:#e3e6ea;--panel:#ffffff;--panel2:#f2f3f5;--edge:#c9ccd1;--hi:#ffffff;--ink:#1d1e20;--muted:#55585e;--faint:#8a8d93;
+  --sky1:#6fa8ff;--sky2:#cfe3ff;--glow:#ffffff66;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{margin:0;overflow-x:hidden;background:var(--bg);color:var(--ink);font:16px/1.65 var(--body);transition:background .5s,color .5s;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img,canvas{image-rendering:pixelated}
+.wrap{max-width:1140px;margin:0 auto;padding:0 28px}
+h1,h2,h3,.head{font-family:var(--head);font-weight:800;letter-spacing:-.025em}
+
+/* ---------- buttons (Ore-UI style) ---------- */
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 22px;font:700 16px var(--head);letter-spacing:0;text-decoration:none;cursor:pointer;
+  color:#fff;background:var(--green);border:2px solid var(--green-lo);box-shadow:inset 0 -5px 0 var(--green-lo),inset 0 2px 0 #ffffff33;transition:transform .08s,background .15s}
+.btn:hover{background:var(--green-hi)}
+.btn:active{transform:translateY(2px);box-shadow:inset 0 -2px 0 var(--green-lo)}
+.btn.ghost{background:var(--panel2);color:var(--ink);border-color:var(--edge);box-shadow:inset 0 -5px 0 var(--edge),inset 0 2px 0 var(--hi)}
+.btn.ghost:hover{background:var(--panel)}
+.btn[aria-disabled=true]{opacity:.5;pointer-events:none}
+.btn:focus-visible,.navlink:focus-visible,.toggle:focus-visible,.slot:focus-visible{outline:3px solid var(--aqua);outline-offset:3px}
+.btn canvas{width:20px;height:20px}
+
+/* ---------- nav ---------- */
+nav{position:fixed;inset:0 0 auto;z-index:20;transition:background .3s,border-color .3s;border-bottom:2px solid transparent}
+nav.solid{background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-color:var(--edge)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:10px;font:800 18px var(--head);letter-spacing:-.02em;text-decoration:none;color:#fff}
+nav.solid .brand{color:var(--ink)}
+.brand canvas{width:28px;height:28px}
+.navlinks{display:flex;gap:6px}
+.navlink{padding:8px 14px;font:600 15px var(--head);text-decoration:none;color:#ffffffcc;border-radius:2px}
+nav.solid .navlink{color:var(--muted)}
+.navlink:hover{background:#ffffff1a;color:#fff}nav.solid .navlink:hover{background:var(--panel2);color:var(--ink)}
+.toggle{width:44px;height:44px;display:grid;place-items:center;cursor:pointer;background:var(--panel2);border:2px solid var(--edge);box-shadow:inset 0 -4px 0 var(--edge)}
+.toggle span{width:18px;height:18px;background:#ffd84a;box-shadow:0 0 0 3px #ffd84a44}
+[data-theme=night] .toggle span{background:#e8ecf5;box-shadow:inset -6px -4px #9aa3b5}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;padding:110px 0 120px;color:#fff;background:#78a7ff}
+/* ---------- Minecraft sky ---------- */
+.sky{position:absolute;inset:0;overflow:hidden;pointer-events:none;perspective:420px;perspective-origin:50% 64%}
+.sky .layer{position:absolute;inset:0;transition:opacity 1.6s ease}
+.sky .day{background:linear-gradient(#6f9ff7 0%,#7fadfc 38%,#a9c8ff 60%,#c4dbff 70%)}
+.sky .night{background:linear-gradient(#020309 0%,#050814 40%,#0b1124 62%,#141b33 70%);opacity:0}
+.sky .dusk{background:radial-gradient(120% 55% at 50% 70%,#ff8a3d 0%,#d9583a55 35%,transparent 65%);opacity:0;transition:opacity 1s ease}
+[data-theme=night] .sky .night{opacity:1}
+.sky.dusking .dusk{opacity:.85}
+.stars{position:absolute;inset:0;opacity:0;transition:opacity 1.6s;image-rendering:pixelated}
+[data-theme=night] .stars{opacity:1}
+.orb{position:absolute;left:62%;top:15%;width:84px;height:84px;transition:transform 1.8s cubic-bezier(.45,0,.25,1),opacity 1.8s}
+.sun{background:#fffbe6;box-shadow:0 0 0 14px #fff3b066,0 0 0 30px #ffe58a22,0 0 90px 40px #fff2b844}
+[data-theme=night] .sun{transform:translate(28vw,70vh);opacity:0}
+.moon{transform:translate(-30vw,70vh);opacity:0}
+.moon canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
+.moon{box-shadow:0 0 70px 26px #c9d4ff22}
+[data-theme=night] .moon{transform:none;opacity:1}
+
+@keyframes drift{from{transform:translateX(-20vw)}to{transform:translateX(120vw)}}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;width:100%}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:#0006;border:2px solid #ffffff22;font:500 14px var(--body);margin-bottom:26px;backdrop-filter:blur(4px)}
+.pill i{width:8px;height:8px;background:#55ff55;box-shadow:0 0 10px #55ff55}
+.hero h1{font-size:clamp(46px,7vw,92px);line-height:.95;margin:0 0 18px;text-shadow:0 4px 0 #0005}
+.hero h1 small{display:block;font-size:.42em;color:#ffffffb3;margin-top:14px;letter-spacing:.02em}
+.hero .lede{font-size:19px;max-width:520px;color:#ffffffd9;margin:0 0 34px}
+.ctas{display:flex;flex-wrap:wrap;gap:12px}
+.splash{display:inline-block;font:400 16px var(--px);color:var(--gold);text-shadow:2px 2px 0 #4a3a00;transform:rotate(-6deg);margin-top:34px;animation:pulse .6s ease-in-out infinite alternate;cursor:pointer;user-select:none}
+@keyframes pulse{to{transform:rotate(-6deg) scale(1.07)}}
+
+/* 3D block scene */
+.scene{position:relative;height:460px;perspective:1400px}
+.float{position:absolute;animation:bob 5s ease-in-out infinite}
+.float.b{animation-delay:-1.7s;animation-duration:6s}.float.c{animation-delay:-3.1s;animation-duration:4.6s}
+@keyframes bob{50%{transform:translateY(-14px)}}
+.cube{--s:150px;width:var(--s);height:var(--s);position:relative;transform-style:preserve-3d;transform:rotateX(-28deg) rotateY(45deg);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.scene:hover .cube{transform:rotateX(-28deg) rotateY(75deg)}
+.face{position:absolute;inset:0;background-size:100% 100%;image-rendering:pixelated}
+.f-top{transform:rotateX(90deg) translateZ(calc(var(--s)/2))}
+.f-front{transform:translateZ(calc(var(--s)/2));filter:brightness(.82)}
+.f-right{transform:rotateY(90deg) translateZ(calc(var(--s)/2));filter:brightness(.64)}
+.f-back{transform:rotateY(180deg) translateZ(calc(var(--s)/2));filter:brightness(.64)}
+.f-left{transform:rotateY(-90deg) translateZ(calc(var(--s)/2));filter:brightness(.82)}
+.shadow{position:absolute;width:var(--w,160px);height:28px;background:radial-gradient(#0007,transparent 70%);filter:blur(2px)}
+.item-float{position:absolute;width:56px;height:56px;filter:drop-shadow(0 8px 6px #0006)}
+
+/* ---------- sections ---------- */
+section{padding:110px 0;position:relative}
+/* ---------- underground: lit cavern ---------- */
+.ground{color:#fff;overflow-x:clip;background:linear-gradient(var(--top),var(--bot))}
+.ground > .wrap{position:relative;z-index:3}
+.edge{position:absolute;left:0;width:100%;z-index:2;pointer-events:none;display:block}
+.glow{position:absolute;z-index:0;border-radius:50%;pointer-events:none;filter:blur(60px);opacity:var(--a,.15)}
+.glow.flicker{animation:flicker 3.2s ease-in-out infinite}
+@keyframes flicker{0%,100%{opacity:var(--a)}40%{opacity:calc(var(--a)*.75)}55%{opacity:calc(var(--a)*1.1)}70%{opacity:calc(var(--a)*.85)}}
+.floater{position:absolute;z-index:1;pointer-events:none;will-change:transform}
+.floater canvas{display:block;width:100%;height:100%;image-rendering:pixelated;animation:drift2 7s ease-in-out infinite}
+@keyframes drift2{50%{transform:translateY(-10px) rotate(2deg)}}
+.spark{position:absolute;width:4px;height:4px;background:var(--c);box-shadow:0 0 8px var(--c);opacity:0;animation:spark 3s ease-out infinite}
+@keyframes spark{0%{opacity:0;transform:translateY(0)}20%{opacity:1}100%{opacity:0;transform:translateY(-46px)}}
+.ground h2{color:#fff;text-shadow:0 3px 0 #0006}
+.ground .intro,.ground .why p{color:#c9c9cc}
+.ground .kicker{color:#7bd35a}
+.adv-view:before{background:#000b!important}
+@media (max-width:900px){.floater{display:none}}
+/* depth meter */
+#depth{position:fixed;right:18px;top:50%;z-index:25;display:flex;align-items:center;gap:12px;transform:translate(16px,-50%);opacity:0;transition:opacity .4s,transform .4s;pointer-events:none}
+#depth.on{opacity:1;transform:translate(0,-50%)}
+#depth .read{text-align:right;color:#fff;text-shadow:0 2px 0 #000}
+#depth .y{font:400 18px var(--px)}
+#depth .nm{font:600 12px var(--body);color:#cfcfcf}
+#depth .col{position:relative;display:flex;flex-direction:column;border:2px solid #000;box-shadow:0 4px 0 #0006}
+#depth .col canvas{width:18px;height:30px;display:block;image-rendering:pixelated;filter:brightness(.55);transition:filter .3s}
+#depth .col canvas.on{filter:none}
+#depth .mk{position:absolute;left:-9px;width:0;height:0;border:5px solid transparent;border-left:6px solid #fff;transform:translateY(-50%);transition:top .12s linear}
+.kicker{display:inline-flex;align-items:center;gap:10px;font:400 14px var(--px);color:var(--green-hi);letter-spacing:.04em;text-transform:uppercase;margin-bottom:12px}
+[data-theme=day] .kicker{color:var(--green)}
+.kicker canvas{width:22px;height:22px}
+h2{font-size:clamp(32px,4.4vw,52px);line-height:1.02;margin:0 0 14px}
+.intro{color:var(--muted);font-size:18px;max-width:600px;margin:0 0 48px}
+.panel{background:var(--panel);border:2px solid var(--edge);box-shadow:inset 0 2px 0 var(--hi),0 6px 0 var(--edge)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* slots */
+.slot{width:48px;height:48px;background:#8b8b8b;box-shadow:inset 3px 3px 0 #373737,inset -3px -3px 0 #fff;display:grid;place-items:center;position:relative;flex:none;transition:background .1s}
+[data-theme=night] .slot{background:#1e1e1f;box-shadow:inset 3px 3px 0 #0d0d0e,inset -3px -3px 0 #4a4b4d}
+.slot:hover{background:#a4a4a4}[data-theme=night] .slot:hover{background:#2c2d2f}
+.slot canvas{width:34px;height:34px}
+.slot .n{position:absolute;right:4px;bottom:1px;font:400 12px var(--px);color:#fff;text-shadow:2px 2px 0 #3f3f3f}
+
+/* tooltip */
+#tip{position:fixed;z-index:60;pointer-events:none;background:#100010f2;border:2px solid #100010;box-shadow:inset 0 0 0 2px #3b0f8a;padding:8px 11px;max-width:300px;font:14px/1.4 var(--body);display:none;color:#ddd}
+#tip .t{font:700 15px var(--head);color:#fff;margin-bottom:2px}#tip .t.aqua{color:var(--aqua)}#tip .t.gold{color:var(--gold)}#tip .t.yellow{color:#ffff55}
+#tip .l{color:#aaa}#tip .l.g{color:#55ff55}#tip .l.p{color:#ff77ff}
+
+/* projects */
+.projects{display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
+.proj{padding:28px;display:flex;flex-direction:column;gap:18px;transition:transform .2s}
+.proj:hover{transform:translateY(-4px)}
+.proj.wide{grid-column:span 2;display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center}
+.craft{display:flex;align-items:center;gap:16px;padding:16px;background:var(--panel2);border:2px solid var(--edge);width:max-content}
+.g3{display:grid;grid-template-columns:repeat(3,48px)}
+.arrow{width:38px;height:26px;background:var(--faint);clip-path:polygon(0 35%,58% 35%,58% 0,100% 50%,58% 100%,58% 65%,0 65%)}
+.out .slot{width:64px;height:64px}.out canvas{width:44px;height:44px}
+.proj h3{font-size:24px;margin:0 0 4px;line-height:1.15}
+.proj .meta{color:var(--faint);font-size:14px;margin-bottom:10px}
+.proj p{margin:0;color:var(--muted)}
+.stat{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:6px 12px;font:700 15px var(--head);color:#fff;background:var(--green);border:2px solid var(--green-lo)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chips span{font-size:13px;padding:3px 10px;background:var(--panel2);border:2px solid var(--edge);color:var(--muted)}
+
+/* skills */
+.skills{display:grid;grid-template-columns:auto auto 1fr;gap:24px;align-items:stretch}
+.heldp{padding:26px;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.heldp canvas{width:96px;height:96px;filter:drop-shadow(0 8px 0 #0005);margin-bottom:10px}
+.held{font:800 30px var(--head);letter-spacing:-.02em;margin:0;min-height:0}
+.invp{padding:22px}
+.invp .lbl{font:400 13px var(--px);color:var(--faint);margin:0 0 10px;letter-spacing:.04em}
+.armor{display:grid;grid-template-columns:48px;gap:0}
+.invgrid{display:grid;grid-template-columns:repeat(9,48px)}
+.hotbar{display:grid;grid-template-columns:repeat(9,48px);margin-top:16px}
+.hotbar .slot.sel{outline:3px solid var(--ink);outline-offset:-1px;z-index:1}
+.heldcat{color:var(--faint);font-size:14px}
+.skillcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:22px;margin-top:34px}
+.skillcols h4{font:800 15px var(--head);margin:0 0 6px;color:var(--ink)}
+.skillcols p{margin:0;color:var(--muted);font-size:15px}
+
+
+/* skills: creative-mode tabs */
+.creative{padding:0;overflow:hidden}
+.ctabs{display:flex;flex-wrap:wrap;gap:0;background:var(--panel2);border-bottom:2px solid var(--edge)}
+.ctabs button{all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;padding:12px 18px;font:700 15px var(--head);color:var(--faint);border-right:2px solid var(--edge)}
+.ctabs button:hover{color:var(--ink)}
+.ctabs button.on{color:var(--ink);background:var(--panel);box-shadow:inset 0 -3px 0 var(--green-hi)}
+.ctabs button:focus-visible{outline:3px solid var(--aqua);outline-offset:-3px}
+.ctabs canvas{width:20px;height:20px;image-rendering:pixelated}
+.ctabs .cnt{font:400 11px var(--px);color:var(--faint)}
+.ctiles{padding:22px;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;min-height:240px;align-content:start}
+.ctile{display:flex;align-items:center;gap:12px;padding:6px 12px 6px 6px;background:var(--panel2);border:2px solid var(--edge);font:600 15px var(--body);transition:border-color .12s,transform .12s;animation:pop .25s both}
+.ctile:hover{border-color:var(--ink);transform:translateY(-2px)}
+.ctile .slot{width:48px;height:48px;background:#8b8b8b;box-shadow:inset 3px 3px 0 #373737,inset -3px -3px 0 #fff}
+.ctile .slot canvas{width:32px;height:32px}
+.ctile small{display:block;font:400 12px var(--body);color:var(--faint)}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}}
+
+/* advancements */
+.advp{padding:0;overflow:hidden}
+.adv-tabs{display:flex;gap:0;background:var(--panel2);border-bottom:2px solid var(--edge)}
+.adv-tabs span{padding:12px 20px;font:700 15px var(--head);color:var(--faint)}.adv-tabs span.on{color:var(--ink);background:var(--panel);box-shadow:inset 0 -3px 0 var(--green-hi)}
+.adv-view{overflow-x:auto;background-size:96px 96px;image-rendering:pixelated;position:relative}
+.adv-view:before{content:"";position:absolute;inset:0;background:#0009;min-width:1060px}
+[data-theme=day] .adv-view:before{background:#0006}
+.adv-canvas{position:relative;width:1060px;height:440px}
+.adv-canvas svg{position:absolute;inset:0}
+.node{position:absolute;width:60px;height:60px;display:grid;place-items:center}
+.node .fr{position:absolute;inset:0;background:#c6c6c6;box-shadow:inset 3px 3px 0 #fff,inset -3px -3px 0 #555;border:2px solid #000;transition:transform .15s}
+.node:hover .fr{transform:scale(1.08)}
+.node.goal .fr{border-radius:16px}
+.node.challenge .fr{background:#e9b64a;box-shadow:inset 3px 3px 0 #fff3a0,inset -3px -3px 0 #8a5a00;clip-path:polygon(18% 0,82% 0,100% 18%,100% 82%,82% 100%,18% 100%,0 82%,0 18%)}
+.node.lock .fr{background:#5b5b5b;box-shadow:inset 3px 3px 0 #777,inset -3px -3px 0 #333}
+.node canvas{position:relative;width:36px;height:36px}
+.node.lock canvas{filter:brightness(0) opacity(.5)}
+.node .cap{position:absolute;top:68px;left:50%;transform:translateX(-50%);width:max-content;max-width:150px;text-align:center;font:700 14px/1.25 var(--head);color:#fff;text-shadow:0 2px 0 #000;z-index:2}
+.node .cap i{display:block;font:400 12px var(--body);font-style:normal;color:#d0d0d0;text-shadow:0 1px 0 #000}
+
+/* server list */
+.lab{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.srvp{padding:10px}
+.srv{display:grid;grid-template-columns:64px 1fr auto;gap:16px;align-items:center;padding:10px;border:2px solid transparent}
+.srv:hover{background:var(--panel2)}
+.srv.sel{border-color:var(--ink)}
+.srv .ico{width:64px;height:64px;background-size:100% 100%;image-rendering:pixelated;box-shadow:0 3px 0 #0004}
+.srv .nm{font:800 18px var(--head);letter-spacing:-.01em}
+.srv .motd{color:var(--muted);font-size:15px}
+.srv .here{font:400 12px var(--px);color:var(--green-hi);white-space:nowrap}
+.why p{color:var(--muted);margin:0 0 14px}
+
+/* contact */
+.contact{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center}
+.chat{background:#000c;padding:18px 0 0;font:15px/1.5 var(--body);color:#fff;border:2px solid #000}
+.chat p{margin:0;padding:3px 18px}
+.chat .y{color:#ffff55}
+.chat .who{color:#55ff55}
+.chat a{color:var(--aqua)}
+.chatbox{display:flex;align-items:center;gap:10px;margin-top:14px;padding:14px 18px;background:#ffffff14;text-decoration:none;color:#fff;border-top:2px solid #ffffff22}
+.chatbox:hover{background:#ffffff22}
+.caret{width:10px;height:3px;background:#fff;align-self:flex-end;margin-bottom:6px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* toast */
+#toast{position:fixed;top:84px;right:18px;z-index:40;width:330px;background:#202020;color:#fff;border:2px solid #000;box-shadow:inset 0 2px 0 #4a4a4a,0 6px 0 #000a;
+  padding:12px 14px;display:flex;gap:14px;align-items:center;transform:translateX(130%);transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+#toast.on{transform:none}
+#toast .a{font:400 14px var(--px);color:#ffff55}#toast .b{font-size:14px}
+#toast canvas{width:36px;height:36px}
+
+/* footer */
+footer{background:#08080a;position:relative;color:#d8d8d8;font-size:13px;border-top:1px solid #ffffff10}
+
+footer .wrap{position:relative;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-top:34px;padding-bottom:34px}
+footer .legal{color:#9a9a9a;font-size:12px;max-width:520px}
+@media (max-width:900px){#depth{display:none}}
+
+@media (max-width:900px){
+  .navlinks{display:none}
+  .hero .wrap{grid-template-columns:1fr}.scene{width:500px;height:460px;zoom:.6;margin:10px auto -20px}
+  .projects{grid-template-columns:1fr}.craft{zoom:.82}.proj{padding:20px}.proj.wide{grid-column:auto;grid-template-columns:1fr}
+  .skills{grid-template-columns:1fr}.heldp{flex-direction:row;align-items:center;gap:16px}.heldp canvas{width:56px;height:56px;margin:0}.armor{grid-template-columns:repeat(4,48px)}
+  .invgrid,.hotbar{grid-template-columns:repeat(9,minmax(0,1fr))}.invgrid .slot,.hotbar .slot{width:auto;aspect-ratio:1;height:auto}
+  .lab,.contact{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<script>document.documentElement.dataset.theme=localStorage.theme||(matchMedia('(prefers-color-scheme: light)').matches?'day':'night')</script>
+
+<nav id="nav"><div class="wrap">
+  <a class="brand" href="#top"><canvas data-block="grass3d" width="16" height="16"></canvas>Devasenan</a>
+  <div class="navlinks"><a class="navlink" href="#projects">Projects</a><a class="navlink" href="#skills">Skills</a><a class="navlink" href="#path">Path</a><a class="navlink" href="#lab">Home lab</a><a class="navlink" href="#contact">Contact</a><a class="navlink" href="../" style="border:2px solid #ffffff33">← Normal site</a></div>
+  <button class="toggle" id="toggle" aria-label="Switch day / night"><span></span></button>
+</div></nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="sky" id="sky" aria-hidden="true">
+    <div class="layer day"></div><div class="layer night"></div>
+    <canvas class="stars" id="stars"></canvas>
+    <div class="orb sun"></div>
+    <div class="orb moon"><canvas id="moon" width="16" height="16"></canvas></div>
+    <div class="layer dusk"></div>
+  </div>
+  <div class="wrap">
+    <div>
+      <div class="pill"><i></i>Open to ML / CV roles and freelance · Montreal</div>
+      <h1>Devasenan Murugan<small>ML / Computer Vision Engineer</small></h1>
+      <p class="lede">I build synthetic data pipelines and vision models, and I measure the gap between sim and real. Master's in Applied CS at Concordia.</p>
+      <div class="ctas">
+        <a class="btn" href="#contact"><canvas data-item="gem:cyan" width="16" height="16"></canvas>Hire me</a>
+        <a class="btn ghost" href="#projects">See projects</a>
+        <a class="btn ghost" href="#" aria-disabled="true">Résumé</a>
+      </div>
+      <div class="splash" id="splash" title="Click for another"></div>
+    </div>
+    <div class="scene" aria-hidden="true">
+      <div class="shadow" style="left:150px;top:380px;--w:220px"></div>
+      <div class="float" style="left:170px;top:150px"><div class="cube" style="--s:170px" data-cube="grass"></div></div>
+      <div class="shadow" style="left:10px;top:330px;--w:140px"></div>
+      <div class="float b" style="left:30px;top:190px"><div class="cube" style="--s:100px" data-cube="table"></div></div>
+      <div class="float c" style="left:390px;top:40px"><div class="cube" style="--s:86px" data-cube="diamond"></div></div>
+      <canvas class="item-float float b" style="left:430px;top:250px" data-item="gem:cyan" width="16" height="16"></canvas>
+      <canvas class="item-float float" style="left:80px;top:40px;width:48px;height:48px" data-item="pick" width="16" height="16"></canvas>
+      <canvas class="item-float float c" style="left:300px;top:20px;width:44px;height:44px" data-item="potion:orange" width="16" height="16"></canvas>
+    </div>
+  </div>
+</header>
+
+<!-- ============ PROJECTS ============ -->
+<section id="projects" class="ground" data-layer="dirt"><div class="wrap">
+  <div class="kicker"><canvas data-block="table3d" width="16" height="16"></canvas>Crafting</div>
+  <h2 class="reveal">What I've built</h2>
+  <p class="intro reveal">Each project shown as its recipe: the tools that went in, and what came out. Hover a slot to see an ingredient.</p>
+
+  <div class="projects">
+    <article class="panel proj wide reveal">
+      <div class="craft">
+        <div class="g3" data-grid="orb:orange|BlenderProc|Domain-randomized renders;gem:cyan|YOLOv8|Ultralytics detector;orb:orange|BlenderProc|;dust:aqua|FID / KID|No-training gap metric;gem:purple|DINOv2|Feature backbone;dust:aqua|FID / KID|;ingot:iron|YCB-V objects|Benchmark objects;dust:red|MMD / KS-test|Drift monitor;ingot:iron|YCB-V objects|"></div>
+        <div class="arrow"></div>
+        <div class="out"><div class="slot" data-item="compass" data-tip="Domain Gap Detector|aqua|Measures the synthetic-to-real gap|before a full train/eval cycle"></div></div>
+      </div>
+      <div>
+        <div class="meta">Aug 2026 – ongoing · personal project</div>
+        <h3>Synthetic-to-Real Domain Gap Detector</h3>
+        <p>Estimates how well synthetic training data will transfer to real-world detection before you commit to a full train/eval cycle. A config-driven render → train → eval pipeline over domain-randomized YCB-V variants, a no-training gap metric (FID/KID on DINOv2 features), and a drift monitor that flags shifts in incoming batches.</p>
+        <div class="chips"><span>BlenderProc</span><span>YOLOv8</span><span>DINOv2</span><span>FID / KID</span><span>MMD / KS-test</span></div>
+      </div>
+    </article>
+
+    <article class="panel proj reveal">
+      <div class="craft">
+        <div class="g3" data-grid="orb:orange|Blender Python API|~100K rendered samples;orb:orange|Blender Python API|;orb:orange|Blender Python API|;paper|Occlusion compositing|Finger and object cutouts;gem:cyan|Card / text / photo detectors|In-house models;paper|OCR|;book:purple|Annotation QA|Guidelines, taxonomy, calibration;ingot:gold|Real re-captures|Vendors photographed printed cards;book:purple|Annotation QA|"></div>
+        <div class="arrow"></div>
+        <div class="out"><div class="slot" data-item="gem:cyan" data-tip="ID-card quality-check data|aqua|Hyperverge|g:~50% FAR, ~12% FRR reduction"></div></div>
+      </div>
+      <div>
+        <div class="meta">Hyperverge · Data Engineer Intern (DL)</div>
+        <h3>ID-card quality-check data</h3>
+        <p>~100K Blender-rendered samples covering blur, glare and partially visible cards, plus an occlusion pipeline for cases Blender couldn't simulate. Led annotation for the QC model and had vendors re-capture printed cards to close the gap.</p>
+        <div class="stat">~50% FAR · ~12% FRR relative reduction</div>
+      </div>
+    </article>
+
+    <article class="panel proj reveal">
+      <div class="craft">
+        <div class="g3" data-grid=";dust:red|Image splicing|;;potion:blue|Photoshop scripting API|Python-driven automation;gem:cyan|Detectors + OCR|Locate regions to edit;potion:blue|Photoshop scripting API|;paper|Pixel-level masks|;book:purple|Per-sample configs|Logged for reproducibility;paper|Pixel-level masks|"></div>
+        <div class="arrow"></div>
+        <div class="out"><div class="slot" data-item="gem:green" data-tip="Synthetic ID-tamper dataset|aqua|~300K samples · 5 classes|pixel-level tamper masks"><span class="n">64</span></div></div>
+      </div>
+      <div>
+        <div class="meta">Hyperverge</div>
+        <h3>Synthetic ID-tamper dataset</h3>
+        <p>Generation pipelines for a 5-class tamper dataset with pixel-level masks, using image splicing and Python-driven Photoshop automation, with per-sample configs logged so later model versions can reproduce it.</p>
+        <div class="stat">~300K samples · 5 classes</div>
+      </div>
+    </article>
+
+    <article class="panel proj wide reveal">
+      <div class="craft">
+        <div class="g3" data-grid="gem:purple|Grounding DINO|Text-prompted detection;gem:green|SAM|Segment Anything;gem:purple|Grounding DINO|;ingot:iron|LSUN-room layout|Modified layout model;compass|RDP + KMeans|Corner extraction;ingot:iron|LSUN-room layout|;dust:gold|LAB / HSV lighting|Shadow and brightness match;;dust:gold|LAB / HSV lighting|"></div>
+        <div class="arrow"></div>
+        <div class="out"><div class="slot" data-block="planks" data-tip="Room re-tiling pipeline|aqua|Deft & Tact · led a team of 3"></div></div>
+      </div>
+      <div>
+        <div class="meta">Deft &amp; Tact Solutions · Project Trainee · led a team of 3</div>
+        <h3>Room re-tiling pipeline</h3>
+        <p>Replaces walls and floors in room photos with a user-chosen tile or wallpaper. Text-prompted segmentation with Grounding DINO + SAM, corner extraction from layout maps (RDP, KMeans), perspective overlay, and LAB/HSV lighting transfer so the shadows still match.</p>
+        <div class="chips"><span>Grounding DINO</span><span>SAM</span><span>OpenCV</span><span>Perspective transforms</span></div>
+      </div>
+    </article>
+  </div>
+</div></section>
+
+<!-- ============ SKILLS ============ -->
+<section id="skills" class="ground" data-layer="stone"><div class="wrap">
+  <div class="kicker"><canvas data-item="pick" width="16" height="16"></canvas>Inventory</div>
+  <h2 class="reveal">What I work with</h2>
+  <p class="intro reveal">Pick a tab like the creative inventory, or browse everything at once.</p>
+  <div class="panel creative reveal">
+    <div class="ctabs" id="ctabs" role="tablist"></div>
+    <div class="ctiles" id="ctiles" role="tabpanel"></div>
+  </div>
+</div></section>
+
+<!-- ============ PATH ============ -->
+<section id="path" class="ground" data-layer="deepslate"><div class="wrap">
+  <div class="kicker"><canvas data-item="ingot:gold" width="16" height="16"></canvas>Advancements</div>
+  <h2 class="reveal">The path so far</h2>
+  <p class="intro reveal">Gold frames are the challenges I'm proudest of. Hover any node for details.</p>
+  <div class="panel advp reveal">
+    <div class="adv-tabs"><span class="on">Career</span></div>
+    <div class="adv-view" data-tex="stone"><div class="adv-canvas" id="advcanvas"><svg id="advlines" width="1060" height="440"></svg></div></div>
+  </div>
+</div></section>
+
+<!-- ============ HOME LAB ============ -->
+<section id="lab" class="ground" data-layer="deep"><div class="wrap">
+  <div class="kicker"><canvas data-block="redstone3d" width="16" height="16"></canvas>Multiplayer</div>
+  <h2 class="reveal">Servers I run</h2>
+  <div class="lab">
+    <div class="panel srvp reveal">
+      <div class="srv sel"><div class="ico" data-tex="grass"></div><div><div class="nm">armor</div><div class="motd">This portfolio</div></div><span class="here">● you are here</span></div>
+      <div class="srv"><div class="ico" data-tex="redstone"></div><div><div class="nm">reddust</div><div class="motd">Minecraft server panel</div></div><span></span></div>
+      <div class="srv"><div class="ico" data-tex="lamp"></div><div><div class="nm">lama</div><div class="motd">Self-hosted LLM · Qwen3-8B on Ollama</div></div><span></span></div>
+      <div class="srv"><div class="ico" data-tex="obsidian"></div><div><div class="nm">memory</div><div class="motd">Long-term memory server for my AI agents</div></div><span></span></div>
+    </div>
+    <div class="why reveal">
+      <p>I run my own home lab: Docker on Linux, Cloudflare tunnels, a local GPU for LLMs, and the services above, including the box that serves this page.</p>
+      <p>It's where I try things before they reach production: serving models, wiring agents to memory, and keeping it all up.</p>
+      <a class="btn ghost" href="https://github.com/devasenan134">See it on GitHub</a>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" class="ground" data-layer="bedrock"><div class="wrap contact">
+  <div>
+    <div class="kicker"><canvas data-item="book:purple" width="16" height="16"></canvas>Join server</div>
+    <h2 class="reveal">Let's build something</h2>
+    <p class="intro reveal" style="margin-bottom:30px">Hiring for ML / CV in Canada, or need help with synthetic data, detection or segmentation? Send me a message.</p>
+    <div class="ctas reveal">
+      <a class="btn" href="mailto:devadas3727@gmail.com">Email me</a>
+      <a class="btn ghost" href="https://github.com/devasenan134">GitHub</a>
+      <a class="btn ghost" href="https://linkedin.com/in/devasenan">LinkedIn</a>
+    </div>
+  </div>
+  <div class="chat reveal">
+    <p class="y">Devasenan joined the game</p>
+    <p><span class="who">&lt;Devasenan&gt;</span> Hey! Open to ML / CV roles and freelance projects.</p>
+    <p><span class="who">&lt;Devasenan&gt;</span> Reach me at <a href="mailto:devadas3727@gmail.com">devadas3727@gmail.com</a></p>
+    <p><span class="who">&lt;Devasenan&gt;</span> English and Tamil both work.</p>
+    <a class="chatbox" href="mailto:devadas3727@gmail.com"><span style="color:#aaa">/msg devasenan</span> hi, I have a project for you<span class="caret"></span></a>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <span>© 2026 Devasenan Murugan · armor.craftingtable.cc</span>
+  <a href="../" style="color:#fff">← Back to the normal site</a>
+  <span class="legal">Not an official Minecraft product. Not approved by or associated with Mojang or Microsoft. All art on this page is original.</span>
+</div></footer>
+
+<div id="toast" role="status" aria-live="polite"><canvas data-item="book:purple" width="16" height="16"></canvas><div><div class="a">Advancement Made!</div><div class="b">Found the contact section</div></div></div>
+<div id="tip"></div>
+<div id="depth" aria-hidden="true"><div class="read"><div class="y" id="ylvl">Y 64</div><div class="nm" id="ynm">Surface</div></div><div class="col" id="ycol"><span class="mk" id="ymk"></span></div></div>
+
+<script>
+/* ---------- pixel-art engine: every texture and item is generated here ---------- */
+let seed=7;const rnd=()=>((seed=Math.imul(seed^seed>>>15,2246822519)+0x9e3779b9|0)>>>0)/4294967296;
+const pick=a=>a[Math.floor(rnd()*a.length)];
+const C16=()=>{const c=document.createElement('canvas');c.width=c.height=16;return c};
+function noise(pal,s){seed=s;const c=C16(),x=c.getContext('2d');for(let i=0;i<256;i++){x.fillStyle=pick(pal);x.fillRect(i%16,i/16|0,1,1)}return c}
+const STONE=['#7f7f7f','#7f7f7f','#8e8e8e','#727272','#686868','#9a9a9a'];
+const BLOCK={
+  dirt:()=>noise(['#866043','#866043','#79553a','#9b7653','#5d4029','#6c4c33'],11),
+  stone:()=>noise(STONE,21),
+  bedrock:()=>noise(['#575757','#2c2c2c','#7a7a7a','#161616','#444'],41),
+  grasstop:()=>noise(['#5d9b3a','#4c8a2a','#6fb043','#57952f','#64a23c'],55),
+  grass:()=>{const c=noise(['#866043','#79553a','#9b7653','#5d4029'],51),x=c.getContext('2d');seed=52;
+    for(let i=0;i<16;i++){const d=3+(rnd()<.5)+(rnd()<.25);for(let y=0;y<d;y++){x.fillStyle=pick(['#5d9b3a','#4c8a2a','#6fb043','#57952f']);x.fillRect(i,y,1,1)}}return c},
+  planks:()=>{seed=61;const c=C16(),x=c.getContext('2d');for(let y=0;y<16;y++)for(let i=0;i<16;i++){x.fillStyle=(y%4==3)?'#6b5030':pick(['#b8945f','#a88654','#c4a06a','#9c7a49']);x.fillRect(i,y,1,1)}
+    x.fillStyle='#6b5030';[[4,0],[11,4],[2,8],[9,12]].forEach(([a,b])=>x.fillRect(a,b,1,3));return c},
+  tabletop:()=>{const c=BLOCK.planks(),x=c.getContext('2d');x.fillStyle='#4a3520';x.fillRect(1,1,14,1);x.fillRect(1,14,14,1);x.fillRect(1,1,1,14);x.fillRect(14,1,1,14);
+    x.fillStyle='#5e4428';[5,10].forEach(v=>{x.fillRect(v,2,1,12);x.fillRect(2,v,12,1)});return c},
+  tableside:()=>{const c=BLOCK.planks(),x=c.getContext('2d');x.fillStyle='#4a3520';x.fillRect(0,0,16,2);
+    x.fillStyle='#8a8a8a';x.fillRect(3,5,2,7);x.fillStyle='#6b5030';x.fillRect(3,4,2,1);x.fillStyle='#9a9a9a';x.fillRect(10,5,3,2);x.fillStyle='#6b5030';x.fillRect(11,7,1,6);return c},
+  diamond:()=>{const c=noise(STONE,23),x=c.getContext('2d');[[3,3],[10,2],[6,8],[12,10],[2,12],[8,13]].forEach(([a,b])=>{
+    [[0,0,'#d8fffd'],[1,0,'#5ee8e0'],[0,1,'#5ee8e0'],[1,1,'#2bb3ad'],[2,1,'#1d8a85']].forEach(([dx,dy,col])=>{x.fillStyle=col;x.fillRect(a+dx,b+dy,1,1)})});return c},
+  redstone:()=>noise(['#b81d12','#d8311f','#8f1308','#ef4a3a','#a11a0d'],71),
+  deepslate:()=>{seed=31;const c=C16(),x=c.getContext('2d');for(let y=0;y<16;y++)for(let i=0;i<16;i++){x.fillStyle=pick(y%4==0?['#35353b','#3c3c43']:['#4d4d55','#45454c','#56565e','#3f3f46']);x.fillRect(i,y,1,1)}return c},
+  deep:()=>{const c=BLOCK.deepslate(),x=c.getContext('2d');
+    const ore=(a,b,cols)=>[[0,0,0],[1,0,1],[0,1,1],[1,1,2],[2,1,2]].forEach(([dx,dy,k])=>{x.fillStyle=cols[k];x.fillRect(a+dx,b+dy,1,1)});
+    ore(2,3,['#d8fffd','#5ee8e0','#1d8a85']);ore(11,10,['#ffb0a8','#ff3b2f','#8f1308']);ore(9,2,['#ffb0a8','#ff3b2f','#8f1308']);return c},
+  lamp:()=>{const c=noise(['#f7c27a','#e2a35a','#fff0c2','#c9843e'],81),x=c.getContext('2d');x.fillStyle='#6d4523';for(let i=0;i<16;i++){x.fillRect(i,0,1,1);x.fillRect(i,15,1,1);x.fillRect(0,i,1,1);x.fillRect(15,i,1,1)}return c},
+  obsidian:()=>noise(['#14101e','#1f1830','#2d2346','#0d0a14','#3b2d5c'],91),
+};
+const URL_={};for(const k in BLOCK)URL_[k]=BLOCK[k]().toDataURL();
+
+const SPR={
+gem:["","....kkkkkkkk....","...kwwmmmmddk...","..kwmmmmmmmmdk..",".kwmmmmmmmmmddk.",".kmmmmmmmmmmddk.","..kmmmmmmmmddk..","...kmmmmmmmdk...","....kmmmmddk....",".....kmmddk.....","......kmdk......",".......kk......."],
+ingot:["","","",".......kkkkkkk..","......kwwmmmmmk.",".....kwmmmmmmdk.","....kwmmmmmmddk.","...kmmmmmmmddk..","..kmmmmmmmddk...","..kddddddddk....","..kkkkkkkkk....."],
+book:["...kkkkkkkkkk...","..kmmmmmmmmmmk..","..kmwmmmmmmmmk..","..kmmmmmmmmmmk..","..kmmmmyymmmmk..","..kmmmmyymmmmk..","..kmmmmmmmmmmk..","..kmmmmmmmmmmk..","..kmmmmmmmmmmk..","..kddddddddddk..","..kwwwwwwwwwwk..","..kkkkkkkkkkkk.."],
+dust:["","......m.........","....mm.mm..m....","...mdmm.mmm.....",".....mmdmm......","..mm.mddmm.mm...","...mmmmmdmmm....","....mmdmmmm.....","..m..mmmm..m....",".....mm.mm......",".......m........"],
+orb:["",".....kkkkkk.....","....kwwmmmmk....","...kwmmmmmmdk...","..kwmmmmmmmmdk..","..kmmmmmmmmmdk..","..kmmmmmmmmddk..","..kmmmmmmmddk...","...kmmmmmddk....","....kddddk......",".....kkkk......."],
+potion:["......kkk.......","......kwk.......",".......k........","......kmk.......",".....kwwmk......","....kwmmmmk.....","...kwmmmmmmk....","...kmmmmmmmk....","...kmmmmmmdk....","....kmmmmdk.....",".....kkkkk......"],
+paper:["","...kkkkkkkk.....","...kwwwwwwwk....","...kwssssswwk...","...kwwwwwwwwk...","...kwssssssswk..","...kwwwwwwwwk...","...kwsssssswk...","...kwwwwwwwwk...","...kkkkkkkkkk..."],
+compass:["....kkkkkkk.....","...kgggggggk....","..kgdddddddgk...","..kgdddwddddgk..","..kgddrwddddgk..","..kgdddrrdddgk..","..kgddddrdddgk..","..kgddddddddgk..","...kggggggggk...","....kkkkkkkk...."],
+pick:["...kkkkkkkk.....","..kwmmmmmmmk....","...kkkkkkmmdk...",".........kbmdk..","........kbk.kdk.",".......kbk...kk.","......kbk.......",".....kbk........","....kbk.........","...kbk..........","..kbk...........",".kbk............",".kk............."],
+};
+const PAL={k:'#1b1b1b',w:'#ffffff',y:'#ffd33d',r:'#d8311f',b:'#7a5533',s:'#9a9a9a',g:'#8a8a8a'};
+const TINT={cyan:['#4fd8d1','#1f9e99'],green:['#41d06b','#1a8a3a'],purple:['#b07ee8','#6e3fb0'],gold:['#ffd33d','#c99016'],iron:['#e2e2e2','#9c9c9c'],
+  orange:['#f08a3a','#b45a1a'],red:['#e5484d','#9a1f1f'],aqua:['#7ff0ff','#2fb0c0'],blue:['#4f8de8','#24519c'],brown:['#9b6a3e','#5e3e22']};
+const DEF={gem:'cyan',ingot:'gold',book:'brown',dust:'red',orb:'aqua',potion:'red',paper:'iron',compass:'iron',pick:'cyan'};
+function drawItem(c,spec){const [n,t]=spec.split(':');const [m,d]=TINT[t||DEF[n]];const x=c.getContext('2d');x.clearRect(0,0,16,16);
+  const rows=SPR[n],off=Math.floor((16-rows.length)/2);
+  rows.forEach((row,y)=>[...row].forEach((ch,i)=>{if(ch=='.'||ch==' ')return;const col=ch=='m'?m:ch=='d'?(n=='compass'?'#3a3a3a':d):PAL[ch];x.fillStyle=col;x.fillRect(i,y+off,1,1)}))}
+function iso(c,top,side){const x=c.getContext('2d');c.width=c.height=32;x.imageSmoothingEnabled=false;
+  const T=BLOCK[top](),S=BLOCK[side]();
+  x.setTransform(1,.5,-1,.5,16,0);x.drawImage(T,0,0,16,16);
+  x.setTransform(.5,.25,0,1,0,8);x.globalAlpha=1;x.drawImage(S,0,0,32,16);x.fillStyle='#0003';x.fillRect(0,0,32,16);
+  x.setTransform(.5,-.25,0,1,16,16);x.drawImage(S,0,0,32,16);x.fillStyle='#0006';x.fillRect(0,0,32,16);x.setTransform(1,0,0,1,0,0)}
+const ISO={grass3d:['grasstop','grass'],table3d:['tabletop','tableside'],redstone3d:['redstone','redstone']};
+function mk(spec,block){const c=C16();block?(ISO[block]?iso(c,...ISO[block]):c.getContext('2d').drawImage(BLOCK[block](),0,0)):drawItem(c,spec);return c}
+
+/* apply */
+document.querySelectorAll('[data-tex]').forEach(el=>el.style.backgroundImage=`url(${URL_[el.dataset.tex]})`);
+document.querySelectorAll('canvas[data-item]').forEach(c=>drawItem(c,c.dataset.item));
+document.querySelectorAll('canvas[data-block]').forEach(c=>{const b=c.dataset.block;ISO[b]?iso(c,...ISO[b]):c.getContext('2d').drawImage(BLOCK[b](),0,0)});
+const CUBES={grass:{top:'grasstop',side:'grass'},table:{top:'tabletop',side:'tableside'},diamond:{top:'diamond',side:'diamond'}};
+document.querySelectorAll('[data-cube]').forEach(el=>{const d=CUBES[el.dataset.cube];['top','front','right','back','left'].forEach(f=>{const s=document.createElement('div');s.className='face f-'+f;s.style.backgroundImage=`url(${URL_[f=='top'?d.top:d.side]})`;el.appendChild(s)})});
+
+function fill(el){if(el.dataset.item)el.prepend(mk(el.dataset.item));else if(el.dataset.block)el.prepend(mk(null,el.dataset.block))}
+document.querySelectorAll('[data-grid]').forEach(g=>g.dataset.grid.split(';').forEach(cell=>{const s=document.createElement('div');s.className='slot';
+  if(cell){const [it,name,lore]=cell.split('|');s.dataset.item=it;s.dataset.tip=name+'||'+(lore||'')}g.appendChild(s)}));
+document.querySelectorAll('div.slot[data-item],div.slot[data-block]').forEach(fill);
+
+/* skills: creative tabs with real logos pixelated (Simple Icons, CC0) */
+const LOGO={Python:'python',PyTorch:'pytorch',OpenCV:'opencv',Docker:'docker',Linux:'linux','Git / GitHub':'git','Scikit-Learn':'scikitlearn',Pandas:'pandas',NumPy:'numpy','Blender Python API':'blender','C++':'cplusplus',Java:'openjdk',Bash:'gnubash','YOLO (Ultralytics)':'ultralytics','SAM':'meta','DINOv2':'meta'};
+const BADGE={SQL:'#4f8de8','Grounding DINO':'#b07ee8','OCR pipelines':'#cfcfcf',Segmentation:'#41d06b','Perspective transforms':'#3fb7c9','Photoshop scripting':'#31a8ff',Albumentations:'#f08a3a','Domain randomization':'#e5484d',Matplotlib:'#3b7bbf',Seaborn:'#4c72b0','Label Studio':'#f75a2b',Unsloth:'#41d06b',AWS:'#ff9900','Data-centric AI':'#ffd33d'};
+function logo(name){const c=C16(),x=c.getContext('2d');
+  if(LOGO[name]){const im=new Image();im.onload=()=>{x.imageSmoothingEnabled=true;x.drawImage(im,1,1,14,14);
+    try{const d=x.getImageData(0,0,16,16);for(let i=3;i<d.data.length;i+=4)d.data[i]=d.data[i]>90?255:0;x.putImageData(d,0,0)}catch(e){}};im.src='../assets/icons/'+LOGO[name]+'.svg'}
+  else{const col=BADGE[name]||'#aaa';x.fillStyle='#1b1b1b';x.fillRect(1,1,14,14);x.fillStyle=col;x.fillRect(2,2,12,12);x.fillStyle='#0004';x.fillRect(2,12,12,2);x.fillRect(12,2,2,12);x.fillStyle='#fff5';x.fillRect(2,2,12,1);x.fillRect(2,2,1,12);
+    x.fillStyle='#fff';x.font='bold 7px monospace';x.textAlign='center';x.textBaseline='middle';x.fillText(name.replace(/[^A-Za-z+]/g,'').slice(0,3).toUpperCase(),8,8.5)}
+  return c}
+const CATS=[
+ ['Languages','book:blue',['Python','SQL','C++','Java','Bash']],
+ ['ML & data','potion:orange',['PyTorch','Scikit-Learn','Pandas','NumPy','Matplotlib','Seaborn','Data-centric AI']],
+ ['Computer vision','gem:cyan',['OpenCV','YOLO (Ultralytics)','SAM','Grounding DINO','DINOv2','OCR pipelines','Segmentation','Perspective transforms']],
+ ['Synthetic data','orb:orange',['Blender Python API','Photoshop scripting','Albumentations','Domain randomization']],
+ ['Tools','pick',['Git / GitHub','Docker','Linux','Label Studio','Unsloth','AWS']],
+];
+const ctabs=document.getElementById('ctabs'),ctiles=document.getElementById('ctiles');
+const ALL=['All','compass',CATS.flatMap(c=>c[2].map(n=>[n,c[0]]))];
+function showCat(i){[...ctabs.children].forEach((b,j)=>{b.classList.toggle('on',j==i);b.setAttribute('aria-selected',j==i)});ctiles.innerHTML='';
+  const list=i==0?ALL[2]:CATS[i-1][2].map(n=>[n,CATS[i-1][0]]);
+  list.forEach(([n,cat],k)=>{const t=document.createElement('div');t.className='ctile';t.style.animationDelay=(k*18)+'ms';
+    const sl=document.createElement('div');sl.className='slot';sl.appendChild(logo(n));t.appendChild(sl);
+    t.insertAdjacentHTML('beforeend',`<div>${n}${i==0?`<small>${cat}</small>`:''}</div>`);ctiles.appendChild(t)})}
+[ALL,...CATS].forEach(([name,icon,items],i)=>{const b=document.createElement('button');b.setAttribute('role','tab');
+  const ic=C16();drawItem(ic,icon);b.appendChild(ic);b.append(name);b.insertAdjacentHTML('beforeend',`<span class="cnt">${items.length}</span>`);
+  b.onclick=()=>showCat(i);ctabs.appendChild(b)});
+showCat(0);
+
+/* advancements */
+const ADV=[
+ {id:'kct',x:40,y:180,type:'task',item:'book:blue',t:'Getting an Education',cap:'KCT, Coimbatore',sub:'2020 – 2024',d:'B.E. Computer Science, 9.2/10'},
+ {id:'best',x:210,y:50,type:'challenge',item:'gem:cyan',t:'Best Outgoing Student',cap:'Best Outgoing Student',sub:'department award',d:'Top of the department, 2020 – 2024'},
+ {id:'merit',x:210,y:310,type:'goal',item:'ingot:gold',t:'Merit Scholarship',cap:'Merit Scholarship',sub:'2021 – 2023',d:'Mahatma Gandhi Merit Scholarship, two years'},
+ {id:'deft',x:380,y:180,type:'task',item:'orb:green',t:'Team Lead',cap:'Deft & Tact',sub:'Apr – Oct 2023',d:'Project trainee. Led a team of 3 on room re-tiling'},
+ {id:'hv',x:550,y:180,type:'task',item:'orb:orange',t:'Into the Pipeline',cap:'Hyperverge',sub:'2024',d:'DL intern. Synthetic data for ID-card QC and tamper detection'},
+ {id:'far',x:470,y:40,type:'challenge',item:'gem:cyan',t:'Diamonds!',cap:'~50% FAR cut',sub:'ID-card QC',d:'~50% FAR, ~12% FRR relative reduction'},
+ {id:'k300',x:630,y:320,type:'goal',item:'gem:green',t:'Stack of Data',cap:'300K samples',sub:'tamper dataset',d:'5 classes with pixel-level masks'},
+ {id:'conc',x:720,y:180,type:'task',item:'book:purple',t:'Leveling Up',cap:'Concordia, Montreal',sub:'2025 – 2026',d:'Master of Applied CS, 3.7/4.3'},
+ {id:'dgd',x:900,y:320,type:'goal',item:'compass',t:'Mind the Gap',cap:'Domain Gap Detector',sub:'ongoing',d:'Measuring the synthetic-to-real gap'},
+ {id:'next',x:900,y:50,type:'lock',item:'potion:green',t:'???',cap:'Next: your team?',sub:'2026 →',d:'ML / CV roles in Canada, plus freelance'},
+];
+const LINKS=[['kct','best'],['kct','merit'],['kct','deft'],['deft','hv'],['hv','far'],['hv','k300'],['hv','conc'],['conc','dgd'],['conc','next']];
+const ac=document.getElementById('advcanvas'),svg=document.getElementById('advlines'),by={};
+ADV.forEach(a=>{by[a.id]=a;const n=document.createElement('div');n.className='node '+a.type;n.style.left=a.x+'px';n.style.top=a.y+'px';
+  n.innerHTML='<div class="fr"></div>';n.appendChild(mk(a.item));n.insertAdjacentHTML('beforeend',`<div class="cap">${a.cap}<i>${a.sub}</i></div>`);
+  n.dataset.tip=`${a.t}|${a.type=='challenge'?'gold':'yellow'}|${a.d}`;ac.appendChild(n)});
+const NS='http://www.w3.org/2000/svg';
+LINKS.forEach(([p,q])=>{const A=by[p],B=by[q],ax=A.x+30,ay=A.y+30,bx=B.x+30,byy=B.y+30,mx=(ax+bx)/2;
+  [['#000',8],['#fff',4]].forEach(([c,w])=>{const l=document.createElementNS(NS,'polyline');l.setAttribute('points',`${ax},${ay} ${mx},${ay} ${mx},${byy} ${bx},${byy}`);
+  l.setAttribute('fill','none');l.setAttribute('stroke',c);l.setAttribute('stroke-width',w);svg.appendChild(l)})});
+
+/* tooltip */
+const tip=document.getElementById('tip');
+document.addEventListener('mouseover',e=>{const el=e.target.closest('[data-tip]');if(!el){tip.style.display='none';return}
+  const [t,cls,...ls]=el.dataset.tip.split('|');tip.innerHTML=`<div class="t ${cls||''}">${t}</div>`+ls.filter(Boolean).map(l=>{const m=l.match(/^([gp]):(.*)/);return `<div class="l ${m?m[1]:''}">${m?m[2]:l}</div>`}).join('');tip.style.display='block'});
+document.addEventListener('mousemove',e=>{if(tip.style.display!='block')return;let x=e.clientX+16;const r=tip.getBoundingClientRect();if(x+r.width>innerWidth-8)x=e.clientX-r.width-16;tip.style.left=x+'px';tip.style.top=Math.max(8,e.clientY-14)+'px'});
+
+/* splash */
+const SPLASH=["Synthetic data, real results!","Also try PyTorch!","100K samples!","Self-hosted!","Now with day/night!","Mind the domain gap!","Made in Montreal!","Blender-rendered!","Open to work!"];
+const sp=document.getElementById('splash');sp.textContent=SPLASH[Math.random()*SPLASH.length|0];
+sp.onclick=()=>{let n;do n=SPLASH[Math.random()*SPLASH.length|0];while(n==sp.textContent);sp.textContent=n};
+
+/* ---------- Minecraft sky ---------- */
+(()=>{
+  /* square stars, like the game */
+  const c=document.getElementById('stars'),x=c.getContext('2d');
+  const drawStars=()=>{c.width=innerWidth;c.height=innerHeight;seed=99;x.fillStyle='#fff';
+    for(let i=0;i<220;i++){x.globalAlpha=.25+rnd()*.75;const z=rnd()<.12?3:2;x.fillRect(rnd()*c.width|0,rnd()*c.height*.72|0,z,z)}};
+  drawStars();addEventListener('resize',drawStars);
+  /* moon: square face with craters */
+  const m=document.getElementById('moon').getContext('2d');
+  ["....wwwwwwww....","..wwwwwwwwwwww..",".wwggwwwwwwwwww.",".wwggwwwwwggwww.","wwwwwwwwwwggwwww","wwwwwwgwwwwwwwww","wwwwwwwwwwwwwwww","wwgggwwwwwwwgwww",
+   "wwgggwwwwwwwwwww","wwwwwwwwwggwwwww","wwwwwwwwwggwwwww","wwgwwwwwwwwwwwww",".wwwwwwwwwwwgww.",".wwwwggwwwwwwww.","..wwwggwwwwwww..","....wwwwwwww...."].forEach((row,y)=>[...row].forEach((ch,i)=>{if(ch=='.')return;m.fillStyle=ch=='w'?'#e9edf7':'#b9c0d0';m.fillRect(i,y,1,1)}));
+})();
+
+
+/* ---------- digging down: lit cavern, one layer per section ---------- */
+const LAYERS=[
+ {id:'projects',tex:'dirt',y0:63,y1:40,name:'Dirt',
+  night:['#3b2a1f','#2e231b'],day:['#5a4330','#4a3829'],
+  glows:[{x:'-6%',y:'-4%',w:620,h:380,c:'#ffb347',a:.20,f:1},{x:'78%',y:'62%',w:420,h:300,c:'#ff9a3c',a:.08,f:1}],
+  float:[{t:['grasstop','grass'],x:'right:3%',y:'7%',s:118,sp:.10},{t:['dirt','dirt'],x:'left:1.5%',y:'66%',s:62,sp:.24,blur:2}]},
+ {id:'skills',tex:'stone',y0:40,y1:8,name:'Stone',
+  night:['#2b2c30','#232428'],day:['#45474c','#3a3c41'],
+  glows:[{x:'-8%',y:'0%',w:560,h:360,c:'#ffb347',a:.14,f:1},{x:'72%',y:'55%',w:460,h:320,c:'#cfd8e8',a:.05}],
+  float:[{t:['stone','stone'],x:'right:2.5%',y:'22%',s:124,sp:.14},{t:['stone','stone'],x:'left:1%',y:'8%',s:70,sp:.3,blur:3}]},
+ {id:'path',tex:'deepslate',y0:8,y1:-24,name:'Deepslate',
+  night:['#1e2028','#181a21'],day:['#33363f','#2b2e36'],
+  glows:[{x:'70%',y:'40%',w:520,h:380,c:'#5ee8e0',a:.16},{x:'-10%',y:'-6%',w:420,h:300,c:'#ffb347',a:.07,f:1}],
+  float:[{t:['diamond','diamond'],x:'right:3.5%',y:'58%',s:92,sp:.12,glow:'#5ee8e0'},{t:['deepslate','deepslate'],x:'left:-1.5%',y:'14%',s:136,sp:.34,blur:4}]},
+ {id:'lab',tex:'deep',y0:-24,y1:-52,name:'Ore vein',
+  night:['#14151b','#101116'],day:['#24262e','#1e2027'],
+  glows:[{x:'-8%',y:'45%',w:520,h:380,c:'#ff3b2f',a:.15},{x:'76%',y:'-4%',w:440,h:320,c:'#5ee8e0',a:.10}],
+  float:[{t:['deep','deep'],x:'left:2.5%',y:'62%',s:108,sp:.14,glow:'#ff3b2f'},{t:['redstone','redstone'],x:'right:3%',y:'14%',s:58,sp:.22,glow:'#ff3b2f'},{t:['obsidian','obsidian'],x:'right:7%',y:'70%',s:74,sp:.32,blur:2}]},
+ {id:'contact',tex:'bedrock',y0:-52,y1:-64,name:'Bedrock',
+  night:['#0c0c0f','#08080a'],day:['#18181c','#121215'],
+  glows:[{x:'30%',y:'70%',w:700,h:340,c:'#8a3cff',a:.13},{x:'-8%',y:'0%',w:360,h:260,c:'#ffb347',a:.06,f:1}],
+  float:[{t:['bedrock','bedrock'],x:'right:-1.5%',y:'18%',s:140,sp:.3,blur:3},{t:['obsidian','obsidian'],x:'left:3%',y:'52%',s:80,sp:.14,glow:'#a66bff'}]},
+];
+const TEXC={};['grass','dirt','stone','deepslate','deep','bedrock'].forEach(k=>TEXC[k]=BLOCK[k]());
+const isDay=()=>document.documentElement.dataset.theme=='day';
+const floaters=[];
+function build(){
+  LAYERS.forEach(L=>{const el=document.getElementById(L.id);
+    L.glows.forEach(g=>{const d=document.createElement('div');d.className='glow'+(g.f?' flicker':'');
+      Object.assign(d.style,{left:g.x,top:g.y,width:g.w+'px',height:g.h+'px',background:g.c});d.style.setProperty('--a',g.a);el.prepend(d)});
+    L.float.forEach(f=>{const w=document.createElement('div');w.className='floater';const [side,v]=f.x.split(':');w.style[side]=v;w.style.top=f.y;w.style.width=w.style.height=f.s+'px';
+      const c=C16();iso(c,f.t[0],f.t[1]);c.style.animationDelay=(-Math.random()*7)+'s';
+      let fil=[];if(f.blur)fil.push(`blur(${f.blur}px) brightness(.7)`);else fil.push('drop-shadow(0 18px 18px #0009)');if(f.glow)fil.push(`drop-shadow(0 0 18px ${f.glow})`);c.style.filter=fil.join(' ');
+      w.appendChild(c);
+      if(f.glow)for(let k=0;k<5;k++){const sp=document.createElement('i');sp.className='spark';sp.style.setProperty('--c',f.glow);sp.style.left=(15+Math.random()*70)+'%';sp.style.top=(20+Math.random()*60)+'%';sp.style.animationDelay=(Math.random()*3)+'s';w.appendChild(sp)}
+      el.appendChild(w);floaters.push({w,sp:f.sp})})});
+}
+/* stepped silhouette edge at the top of each layer */
+function steps(width,h,seedv,minY){seed=seedv;const B=48;let d=`M0 ${h}`;let y=minY+Math.floor(rnd()*3)*8;d+=` V${y}`;
+  for(let x=0;x<width+B;x+=B){if(rnd()<.55)y=Math.max(minY,Math.min(h-6,y+(rnd()<.5?-8:8)));d+=` V${y} H${x+B}`}return d+` V${h} Z`}
+function layout(){
+  const W=document.documentElement.clientWidth,day=isDay();
+  LAYERS.forEach((L,i)=>{const el=document.getElementById(L.id);const [top,bot]=day?L.day:L.night;
+    el.style.setProperty('--top',top);el.style.setProperty('--bot',bot);
+    el.querySelectorAll(':scope>.edge').forEach(n=>n.remove());
+    const H=i?30:44,svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('class','edge');svg.setAttribute('width',W);svg.setAttribute('height',H);
+    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.style.top=(-H+1)+'px';
+    if(!i){svg.innerHTML=`<path d="${steps(W,H,300,2)}" fill="${day?'#6fb043':'#4c8a2a'}"/><path d="${steps(W,H,300,2).replace(/V(\d+)/g,(m,n)=>'V'+Math.min(H,+n+12))}" fill="${top}"/>`}
+    else svg.innerHTML=`<path d="${steps(W,H,500+i*41,4)}" fill="${top}"/>`;
+    el.prepend(svg)});
+}
+function parallax(){const vh=innerHeight;floaters.forEach(({w,sp})=>{const r=w.parentElement.getBoundingClientRect();const off=(r.top+r.height/2-vh/2)*sp;w.style.transform=`translate3d(0,${off.toFixed(1)}px,0)`})}
+build();
+/* depth meter */
+const ycol=document.getElementById('ycol');
+[{tex:'grass',name:'Surface'},...LAYERS].forEach(L=>{const c=C16();c.getContext('2d').drawImage(TEXC[L.tex],0,0);c.dataset.name=L.name||'Surface';ycol.appendChild(c)});
+const depth=document.getElementById('depth'),ylvl=document.getElementById('ylvl'),ynm=document.getElementById('ynm'),ymk=document.getElementById('ymk');
+function meter(){const secs=LAYERS.map(L=>document.getElementById(L.id));const mid=scrollY+innerHeight*.5;const hero=document.getElementById('top');
+  let y,idx=0,frac=0;const s0=secs[0].getBoundingClientRect().top+scrollY;
+  if(mid<s0){frac=Math.max(0,mid/s0);y=80-(80-63)*frac;idx=0}
+  else{for(let i=0;i<secs.length;i++){const t=secs[i].getBoundingClientRect().top+scrollY,b=t+secs[i].offsetHeight;if(mid<b||i==secs.length-1){frac=Math.min(1,Math.max(0,(mid-t)/(b-t)));y=LAYERS[i].y0+(LAYERS[i].y1-LAYERS[i].y0)*frac;idx=i+1;break}}}
+  ylvl.textContent='Y '+Math.round(y);const cs=[...ycol.querySelectorAll('canvas')];cs.forEach((c,j)=>c.classList.toggle('on',j==idx));ynm.textContent=cs[idx].dataset.name;
+  ymk.style.top=(idx*30+frac*30+2)+'px';depth.classList.toggle('on',scrollY>innerHeight*.5)}
+let raf=0;addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;meter();parallax()})},{passive:true});
+let lastW=0;new ResizeObserver(()=>{const w=document.documentElement.clientWidth;if(w!==lastW){lastW=w;layout()}meter();parallax()}).observe(document.body);
+document.fonts.ready.then(()=>{layout();meter();parallax()});
+
+/* theme */
+document.getElementById('toggle').onclick=()=>{const t=document.documentElement.dataset.theme=='day'?'night':'day';const sk=document.getElementById('sky');sk.classList.add('dusking');setTimeout(()=>sk.classList.remove('dusking'),1300);document.documentElement.dataset.theme=t;localStorage.theme=t;layout()};
+
+/* nav + reveal + toast */
+const nav=document.getElementById('nav');const onS=()=>nav.classList.toggle('solid',scrollY>40);addEventListener('scroll',onS,{passive:true});onS();
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+const toast=document.getElementById('toast');let done=false;
+new IntersectionObserver(es=>{if(es[0].isIntersecting&&!done){done=true;toast.classList.add('on');setTimeout(()=>toast.classList.remove('on'),4200)}},{threshold:.4}).observe(document.getElementById('contact'));
+</script>
+</body>
+</html>

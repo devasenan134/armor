@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Devasenan Murugan · ML / Computer Vision Engineer</title>
+<meta name="description" content="Devasenan Murugan, ML / Computer Vision engineer in Montreal. Synthetic data pipelines, detection and segmentation.">
+<style>
+@font-face{font-family:Monocraft;src:url(fonts/Monocraft.ttf) format("truetype");font-display:swap}
+@font-face{font-family:Monocraft;font-weight:700;src:url(fonts/Monocraft-Bold.ttf) format("truetype");font-display:swap}
+:root{
+  --white:#fff;--gray:#aaaaaa;--dgray:#555;--yellow:#ffff55;--gold:#ffaa00;--aqua:#55ffff;--green:#55ff55;--red:#ff5555;--purple:#aa00aa;
+  --gui:#c6c6c6;--gui-ink:#404040;--slot:#8b8b8b;
+  --sky1:#78a7ff;--sky2:#c4dcff;--shade:.45;
+}
+[data-theme=night]{--sky1:#060a1e;--sky2:#1c2552;--shade:.62}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.55 Monocraft,ui-monospace,monospace;color:var(--white);background:#1b1b1b;image-rendering:pixelated;-webkit-font-smoothing:none}
+a{color:inherit}
+.sh{text-shadow:2px 2px 0 #3f3f3f}
+.tex{background-size:64px 64px;image-rendering:pixelated}
+
+/* ---------- title screen ---------- */
+#title{min-height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px 200px;
+  background:linear-gradient(var(--sky1),var(--sky2) 75%);transition:background .6s}
+.celestial{position:absolute;top:70px;right:12%;width:72px;height:72px;background:#fff36b;box-shadow:0 0 0 8px #fff36b55,0 0 60px 20px #fff36b44}
+[data-theme=night] .celestial{background:#e8ecf5;box-shadow:inset -18px -10px #c9cfdd,0 0 0 8px #e8ecf522}
+.stars{position:absolute;inset:0;opacity:0;transition:opacity .6s;pointer-events:none}
+[data-theme=night] .stars{opacity:1}
+.cloud{position:absolute;height:28px;background:#fff;opacity:.92;animation:drift linear infinite}
+.cloud:before,.cloud:after{content:"";position:absolute;background:#fff;height:28px}
+.cloud:before{width:60%;left:15%;top:-28px}.cloud:after{width:30%;left:55%;top:-14px;height:14px}
+[data-theme=night] .cloud{opacity:.14}
+@keyframes drift{from{transform:translateX(-30vw)}to{transform:translateX(130vw)}}
+.terrain{position:absolute;left:0;right:0;bottom:0;height:192px}
+.terrain .grass{height:64px;background-repeat:repeat-x}
+.terrain .dirt{height:128px}
+.logo-wrap{position:relative;text-align:center;z-index:2}
+.logo{position:relative;font:700 clamp(46px,10.5vw,128px)/1 Monocraft,monospace;letter-spacing:.02em;margin:0;color:transparent;
+  -webkit-background-clip:text;background-clip:text;background-size:48px 48px;-webkit-text-stroke:2px #161616}
+.logo:before{content:attr(data-text);position:absolute;left:0;top:0;width:100%;color:#2b2b2b;-webkit-text-stroke:2px #161616;transform:translate(0,7px);z-index:-1}
+.edition{margin-top:14px;font-size:clamp(12px,1.6vw,18px);letter-spacing:.35em;color:#fff}
+.splash{position:absolute;right:-4%;bottom:6px;color:var(--yellow);text-shadow:3px 3px 0 #3f3f00;font-size:clamp(13px,1.8vw,20px);
+  transform:rotate(-18deg);transform-origin:center;animation:pulse .5s ease-in-out infinite alternate;white-space:nowrap;cursor:pointer}
+@keyframes pulse{from{transform:rotate(-18deg) scale(1)}to{transform:rotate(-18deg) scale(1.09)}}
+.menu{margin-top:52px;display:grid;gap:10px;width:min(420px,100%);z-index:2}
+.menu .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mcbtn{display:flex;align-items:center;justify-content:center;min-height:44px;padding:0 14px;border:2px solid #000;
+  background-color:#6f6f6f;box-shadow:inset 2px 2px 0 #ffffff55,inset -2px -4px 0 #00000055;
+  color:#fff;text-shadow:2px 2px 0 #3f3f3f;text-decoration:none;font:15px Monocraft,monospace;cursor:pointer}
+.mcbtn:hover,.mcbtn:focus-visible{background-color:#7e88bf;border-color:#fff;outline:none;color:#ffffa0}
+.mcbtn[aria-disabled=true]{background-color:#4a4a4a;color:#a0a0a0;pointer-events:none}
+.corner{position:absolute;bottom:200px;font-size:13px;z-index:2}
+.corner.l{left:14px}.corner.r{right:14px;text-align:right}
+
+/* ---------- screens (sections) ---------- */
+.screen{position:relative;padding:72px 20px 88px}
+.screen:before{content:"";position:absolute;inset:0;background:#000;opacity:var(--shade);transition:opacity .6s;pointer-events:none}
+.screen > *{position:relative}
+.screen-title{text-align:center;font-size:clamp(20px,2.6vw,28px);margin:0 0 6px}
+.screen-sub{text-align:center;color:var(--gray);margin:0 0 40px}
+.inner{max-width:1040px;margin:0 auto}
+.ylabel{position:absolute;left:16px;top:18px;font-size:12px;color:#e0e0e0}
+
+/* GUI panel + slots */
+.gui{background:var(--gui);color:var(--gui-ink);border:2px solid #000;box-shadow:inset 4px 4px 0 #fff,inset -4px -4px 0 #555;padding:18px 20px;text-shadow:none}
+.gui h3{margin:0 0 2px;font-size:18px;color:#222}
+.gui .meta{color:#6a6a6a;font-size:13px;margin-bottom:10px}
+.gui p{margin:0 0 10px}
+.slot{width:40px;height:40px;background:var(--slot);box-shadow:inset 2px 2px 0 #373737,inset -2px -2px 0 #fff;display:grid;place-items:center;position:relative;flex:none}
+.slot:hover{background:#a3a3a3}
+.slot canvas,.slot img{width:32px;height:32px;image-rendering:pixelated}
+.slot .n{position:absolute;right:2px;bottom:-1px;font-size:13px;color:#fff;text-shadow:2px 2px 0 #3f3f3f}
+
+/* tooltip */
+#tip{position:fixed;z-index:50;pointer-events:none;background:#100010f0;border:2px solid #100010;box-shadow:inset 0 0 0 2px #2d0a6b;padding:6px 9px;max-width:300px;font-size:14px;line-height:1.35;display:none;text-shadow:2px 2px 0 #1a1a1a}
+#tip .t{color:#fff}#tip .t.aqua{color:var(--aqua)}#tip .t.gold{color:var(--gold)}#tip .t.yellow{color:var(--yellow)}
+#tip .l{color:var(--gray)}#tip .l.p{color:#ff55ff}#tip .l.g{color:var(--green)}#tip .l.b{color:#5555ff}
+
+/* recipes */
+.recipes{display:grid;gap:22px}
+.recipe{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start}
+.craft{display:flex;flex-direction:column;gap:6px}
+.craft .lbl{font-size:13px;color:#404040}
+.craft .body{display:flex;align-items:center;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,40px)}
+.arrow{width:34px;height:24px;background:#8b8b8b;clip-path:polygon(0 35%,60% 35%,60% 0,100% 50%,60% 100%,60% 65%,0 65%)}
+.out .slot{width:56px;height:56px}.out canvas{width:40px;height:40px}
+.result{color:#1d7a1d;font-weight:700}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.tags span{font-size:12px;background:#8b8b8b;color:#fff;text-shadow:1px 1px 0 #3f3f3f;padding:1px 7px;box-shadow:inset 1px 1px 0 #373737,inset -1px -1px 0 #fff}
+
+/* inventory */
+.inv{max-width:720px;margin:0 auto;display:grid;grid-template-columns:auto 1fr;gap:22px}
+.armor{display:grid;gap:0;align-content:start}
+.player{width:100%;min-height:176px;background:#000;border:2px solid #373737;display:grid;place-items:center;color:#9a9a9a;font-size:12px;text-align:center;padding:10px}
+.invgrid{display:grid;grid-template-columns:repeat(9,40px);margin-top:6px}
+.hotbar{display:grid;grid-template-columns:repeat(9,40px);margin-top:12px}
+.held{text-align:center;margin-top:22px;min-height:24px}
+.skills-text{max-width:720px;margin:22px auto 0;color:#d6d6d6;font-size:13px}
+.skills-text b{color:var(--yellow);font-weight:400}
+
+/* advancements */
+.adv-win{max-width:1040px;margin:0 auto;border:2px solid #000;box-shadow:inset 4px 4px 0 #fff,inset -4px -4px 0 #555;background:var(--gui);padding:10px 10px 14px}
+.adv-win .hd{color:#404040;padding:2px 8px 8px}
+.adv-tabs{display:flex;gap:4px;padding:0 6px}
+.adv-tabs span{background:#8b8b8b;color:#fff;text-shadow:1px 1px 0 #3f3f3f;padding:4px 12px;font-size:13px;box-shadow:inset 2px 2px 0 #fff4,inset -2px 0 0 #0004}
+.adv-tabs span.on{background:var(--gui);color:#404040;text-shadow:none}
+.adv-view{position:relative;overflow-x:auto;border:2px solid #373737}
+.adv-canvas{position:relative;width:1000px;height:440px}
+.adv-canvas svg{position:absolute;inset:0}
+.node{position:absolute;width:52px;height:52px;display:grid;place-items:center;cursor:default}
+.node .fr{position:absolute;inset:0;background:#c6c6c6;box-shadow:inset 3px 3px 0 #fff,inset -3px -3px 0 #555;border:2px solid #000}
+.node.goal .fr{border-radius:14px}
+.node.challenge .fr{background:#e9b64a;box-shadow:inset 3px 3px 0 #fff3a0,inset -3px -3px 0 #8a5a00;clip-path:polygon(18% 0,82% 0,100% 18%,100% 82%,82% 100%,18% 100%,0 82%,0 18%)}
+.node.lock{opacity:.55}.node.lock .fr{background:#6b6b6b}
+.node canvas{position:relative;width:32px;height:32px}
+.node .cap{position:absolute;top:58px;left:50%;transform:translateX(-50%);width:max-content;max-width:130px;text-align:center;font-size:13px;line-height:1.3;color:#fff;text-shadow:1px 1px 0 #000;background:#000b;padding:2px 6px;z-index:2}
+.node .cap i{display:block;font-style:normal;color:#cfcfcf}
+
+/* servers */
+.servers{max-width:720px;margin:0 auto}
+.srv{display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center;padding:6px;border:2px solid transparent;cursor:pointer}
+.srv:hover,.srv.sel{border-color:#808080;background:#0007}.srv.sel{border-color:#fff}
+.srv .ico{width:64px;height:64px;background-size:64px 64px;image-rendering:pixelated}
+.srv .nm{color:#fff}.srv .motd{color:var(--gray)}
+.srv .here{color:var(--green)}
+.srv-btns{max-width:720px;margin:20px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+
+/* chat / contact */
+.chat{max-width:720px;margin:0 auto}
+.chat .line{background:#0008;padding:3px 10px;margin:0}
+.chat .line.y{color:var(--yellow)}
+.chat .line a{color:var(--aqua)}
+.chatbox{display:flex;gap:10px;align-items:center;background:#000a;margin-top:12px;padding:10px 12px;color:#fff;text-decoration:none;border:2px solid transparent}
+.chatbox:hover,.chatbox:focus-visible{border-color:#fff;outline:none}
+.caret{width:10px;height:3px;background:#fff;align-self:flex-end;margin-bottom:5px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.contact-btns{max-width:720px;margin:22px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+
+/* toast */
+#toast{position:fixed;top:16px;right:16px;z-index:40;width:320px;background:#212121;border:2px solid #000;box-shadow:inset 2px 2px 0 #555,inset -2px -2px 0 #111;
+  padding:10px 12px;display:flex;gap:12px;align-items:center;transform:translateX(120%);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+#toast.on{transform:none}
+#toast .a{color:var(--yellow)}#toast .b{color:#fff}
+
+/* footer / hud */
+footer{padding:26px 20px;text-align:center;color:#bdbdbd;font-size:12px;position:relative}
+footer:before{content:"";position:absolute;inset:0;background:#000;opacity:.35}
+footer *{position:relative}
+#hud{position:fixed;left:10px;bottom:10px;z-index:30;font-size:12px;background:#0006;padding:3px 8px;color:#e0e0e0}
+#daynight{position:fixed;right:16px;bottom:16px;z-index:30;width:48px;height:48px;padding:0}
+#daynight i{width:20px;height:20px;background:#fff36b}
+[data-theme=night] #daynight i{background:#e8ecf5;box-shadow:inset -7px -4px #9aa3b5}
+
+@media (max-width:820px){
+  .recipe{grid-template-columns:1fr}
+  .inv{grid-template-columns:1fr}.armor{grid-template-columns:repeat(4,40px)}.player{display:none}
+  .invgrid,.hotbar{grid-template-columns:repeat(9,minmax(0,40px))}
+  .corner{display:none}#hud{display:none}
+  .srv-btns,.contact-btns{grid-template-columns:1fr}
+  .splash{right:0}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<script>document.documentElement.dataset.theme=localStorage.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'night':'day')</script>
+
+<!-- ================= TITLE SCREEN ================= -->
+<header id="title" data-y="Y: 72 · Surface">
+  <canvas class="stars" id="stars" aria-hidden="true"></canvas>
+  <div class="celestial" aria-hidden="true"></div>
+  <div class="cloud" style="top:16%;width:180px;animation-duration:90s;animation-delay:-20s" aria-hidden="true"></div>
+  <div class="cloud" style="top:28%;width:120px;animation-duration:120s;animation-delay:-70s" aria-hidden="true"></div>
+  <div class="cloud" style="top:9%;width:240px;animation-duration:150s;animation-delay:-110s" aria-hidden="true"></div>
+
+  <div class="logo-wrap">
+    <h1 class="logo" data-text="DEVASENAN" data-tex="stone">DEVASENAN</h1>
+    <div class="edition sh">ML · COMPUTER VISION EDITION</div>
+    <div class="splash" id="splash" title="Click for another">Synthetic data, real results!</div>
+  </div>
+
+  <nav class="menu" aria-label="Main menu">
+    <a class="mcbtn" href="#projects">Singleplayer · Projects</a>
+    <a class="mcbtn" href="#lab">Multiplayer · Home Lab</a>
+    <div class="row">
+      <a class="mcbtn" href="#skills">Inventory</a>
+      <a class="mcbtn" href="#path">Advancements</a>
+    </div>
+    <div class="row">
+      <a class="mcbtn" href="#" aria-disabled="true" title="Coming soon">Résumé (PDF)</a>
+      <a class="mcbtn" href="#contact">Join · Contact</a>
+    </div>
+  </nav>
+
+  <div class="corner l sh">Devasenan Murugan v2.1<br>Montreal, QC · open to ML roles</div>
+  <div class="corner r sh">ML / CV engineer · freelance<br>armor.craftingtable.cc</div>
+
+  <div class="terrain" aria-hidden="true"><div class="grass tex" data-tex="grass"></div><div class="dirt tex" data-tex="dirt"></div></div>
+</header>
+
+<!-- ================= PROJECTS (crafting) ================= -->
+<section class="screen tex" id="projects" data-tex="dirt" data-y="Y: 56 · Projects">
+  <div class="inner">
+    <h2 class="screen-title sh">Crafting · Projects</h2>
+    <p class="screen-sub sh">Hover the slots to see what went into each one.</p>
+    <div class="recipes">
+
+      <article class="gui recipe">
+        <div class="craft"><div class="lbl">Crafting</div><div class="body">
+          <div class="g3" data-grid="orb:orange|BlenderProc|Domain-randomized renders;gem:cyan|YOLOv8|Ultralytics detector;orb:orange|BlenderProc|;dust:aqua|FID / KID|No-training gap metric;gem:purple|DINOv2|Feature backbone;dust:aqua|FID / KID|;ingot:iron|YCB-V objects|Benchmark objects;dust:red|MMD / KS-test|Drift monitor;ingot:iron|YCB-V objects|"></div>
+          <div class="arrow"></div>
+          <div class="out"><div class="slot" data-item="compass" data-tip="Domain Gap Detector|aqua|Measures the synthetic-to-real gap|before a full train/eval cycle.|p:Ongoing · Aug 2026"></div></div>
+        </div></div>
+        <div>
+          <h3>Synthetic-to-Real Domain Gap Detector</h3>
+          <div class="meta">Aug 2026 – ongoing · personal project</div>
+          <p>Estimates how well synthetic training data will transfer to real-world detection before you commit to a full train/eval cycle. A config-driven render → train → eval pipeline over domain-randomized YCB-V variants, a no-training gap metric (FID/KID on DINOv2 features), and a drift monitor that flags shifts in incoming image batches.</p>
+          <div class="tags"><span>BlenderProc</span><span>YOLOv8</span><span>DINOv2</span><span>FID / KID</span><span>MMD / KS-test</span></div>
+        </div>
+      </article>
+
+      <article class="gui recipe">
+        <div class="craft"><div class="lbl">Crafting</div><div class="body">
+          <div class="g3" data-grid="orb:orange|Blender Python API|~100K rendered samples;orb:orange|Blender Python API|;orb:orange|Blender Python API|;paper|Occlusion compositing|Finger and object cutouts;gem:cyan|Card / text / photo detectors|In-house models;paper|OCR|;book:purple|Annotation QA|Guidelines, taxonomy, calibration;ingot:gold|Real re-captures|Vendors photographed printed cards;book:purple|Annotation QA|"></div>
+          <div class="arrow"></div>
+          <div class="out"><div class="slot" data-item="gem:cyan" data-tip="ID-card quality-check data|aqua|Hyperverge · DL intern|g:~50% FAR, ~12% FRR|g:relative reduction"></div></div>
+        </div></div>
+        <div>
+          <h3>ID-card quality-check data</h3>
+          <div class="meta">Hyperverge, Bangalore · Data Engineer Intern (DL)</div>
+          <p>~100K Blender-rendered samples covering blur, glare and partially visible cards, plus an occlusion pipeline for cases Blender couldn't simulate. Fixed class imbalance with a controlled generator, led annotation for the QC model, and had vendors re-capture printed cards to close the synthetic-to-real gap.</p>
+          <p class="result">~50% FAR and ~12% FRR relative reduction in the QC pipeline</p>
+        </div>
+      </article>
+
+      <article class="gui recipe">
+        <div class="craft"><div class="lbl">Crafting</div><div class="body">
+          <div class="g3" data-grid=";dust:red|Image splicing|;;potion:blue|Photoshop scripting API|Python-driven automation;gem:cyan|Detectors + OCR|Locate regions to edit;potion:blue|Photoshop scripting API|;paper|Pixel-level masks|;book:purple|Per-sample configs|Logged for reproducibility;paper|Pixel-level masks|"></div>
+          <div class="arrow"></div>
+          <div class="out"><div class="slot" data-item="gem:green" data-tip="Synthetic ID-tamper dataset|aqua|~300K samples · 5 classes|with pixel-level tamper masks"><span class="n">64</span></div></div>
+        </div></div>
+        <div>
+          <h3>Synthetic ID-tamper dataset</h3>
+          <div class="meta">Hyperverge</div>
+          <p>Generation pipelines for a 5-class tamper dataset with pixel-level masks, using image splicing and Python-driven Photoshop automation. Ran in-house detectors and OCR inside the pipeline to find regions to edit, and logged per-sample configs so later model versions could reproduce it.</p>
+          <p class="result">~300K samples · 5 classes</p>
+        </div>
+      </article>
+
+      <article class="gui recipe">
+        <div class="craft"><div class="lbl">Crafting</div><div class="body">
+          <div class="g3" data-grid="gem:purple|Grounding DINO|Text-prompted detection;gem:green|SAM|Segment Anything;gem:purple|Grounding DINO|;ingot:iron|LSUN-room layout|Modified layout model;compass|RDP + KMeans|Corner extraction;ingot:iron|LSUN-room layout|;dust:gold|LAB / HSV lighting|Shadow and brightness match;;dust:gold|LAB / HSV lighting|"></div>
+          <div class="arrow"></div>
+          <div class="out"><div class="slot" data-block="planks" data-tip="Room re-tiling pipeline|aqua|Deft & Tact · led a team of 3|Swap walls and floors for|a chosen tile or wallpaper"></div></div>
+        </div></div>
+        <div>
+          <h3>Room re-tiling pipeline</h3>
+          <div class="meta">Deft &amp; Tact Solutions, Hyderabad · Project Trainee · led a team of 3</div>
+          <p>Replaces walls and floors in room photos with a user-chosen tile or wallpaper. Text-prompted segmentation with Grounding DINO + SAM, corner extraction from layout maps (RDP, KMeans), perspective overlay, and LAB/HSV lighting transfer so shadows still match.</p>
+          <div class="tags"><span>Grounding DINO</span><span>SAM</span><span>OpenCV</span><span>Perspective transforms</span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SKILLS (inventory) ================= -->
+<section class="screen tex" id="skills" data-tex="stone" data-y="Y: 24 · Inventory">
+  <div class="inner">
+    <h2 class="screen-title sh">Inventory · Skills</h2>
+    <p class="screen-sub sh">Armor is the core stack. Press 1–9 to cycle the hotbar.</p>
+    <div class="gui inv">
+      <div class="armor">
+        <div class="slot" data-item="book:blue" data-tip="Python|yellow|Helmet slot|Main language"></div>
+        <div class="slot" data-item="potion:orange" data-tip="PyTorch|yellow|Chestplate slot|Training and eval"></div>
+        <div class="slot" data-item="orb:green" data-tip="OpenCV|yellow|Leggings slot|Classical CV"></div>
+        <div class="slot" data-item="orb:orange" data-tip="Blender Python API|yellow|Boots slot|Synthetic data"></div>
+      </div>
+      <div>
+        <div class="player">Devasenan<br>ML / CV engineer<br>Montreal, QC</div>
+        <div class="invgrid" id="invgrid"></div>
+        <div class="hotbar" id="hotbar"></div>
+      </div>
+    </div>
+    <div class="held sh" id="held">PyTorch</div>
+    <p class="skills-text sh"><b>Languages</b> Python, SQL, Java, C++, Bash · <b>ML</b> PyTorch, Scikit-Learn, Pandas, NumPy, Matplotlib, Seaborn, data-centric AI · <b>Vision</b> OpenCV, YOLO, Grounding DINO, SAM, OCR, segmentation, perspective transforms · <b>Synthetic data</b> Blender Python API, Photoshop scripting, domain randomization, Albumentations · <b>Tools</b> Git, Docker, Linux, Label Studio, Unsloth, AWS</p>
+  </div>
+</section>
+
+<!-- ================= PATH (advancements) ================= -->
+<section class="screen tex" id="path" data-tex="deepslate" data-y="Y: -8 · Advancements">
+  <div class="inner">
+    <h2 class="screen-title sh">Advancements · Path so far</h2>
+    <p class="screen-sub sh">Gold frames are challenges. Hover for details.</p>
+    <div class="adv-win">
+      <div class="adv-tabs"><span class="on">Career</span><span>Education</span></div>
+      <div class="adv-view tex" data-tex="stone" style="--shade:0">
+        <div class="adv-canvas" id="advcanvas"><svg id="advlines" width="1000" height="440"></svg></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOME LAB (server list) ================= -->
+<section class="screen tex" id="lab" data-tex="dirt" data-y="Y: -32 · Multiplayer">
+  <div class="inner">
+    <h2 class="screen-title sh">Play Multiplayer · Home Lab</h2>
+    <p class="screen-sub sh">I self-host my own tools at home. This site is one of them.</p>
+    <div class="servers" id="servers">
+      <div class="srv sel"><div class="ico" data-tex="grass"></div><div><div class="nm">armor</div><div class="motd">This portfolio · <span class="here">you are here</span></div></div></div>
+      <div class="srv"><div class="ico" data-tex="redstone"></div><div><div class="nm">reddust</div><div class="motd">Minecraft server panel</div></div></div>
+      <div class="srv"><div class="ico" data-tex="lamp"></div><div><div class="nm">lama</div><div class="motd">Self-hosted LLM · Qwen3-8B on Ollama</div></div></div>
+      <div class="srv"><div class="ico" data-tex="obsidian"></div><div><div class="nm">memory</div><div class="motd">Long-term memory server for my AI agents</div></div></div>
+    </div>
+    <div class="srv-btns">
+      <a class="mcbtn" href="#contact">Join Server</a>
+      <a class="mcbtn" href="https://github.com/devasenan134">GitHub</a>
+      <a class="mcbtn" href="#title">Cancel</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT (chat) ================= -->
+<section class="screen tex" id="contact" data-tex="bedrock" data-y="Y: -64 · Bedrock">
+  <div class="inner">
+    <h2 class="screen-title sh">Chat · Contact</h2>
+    <p class="screen-sub sh">Hiring for ML / CV, or need help with synthetic data, detection or segmentation?</p>
+    <div class="chat sh">
+      <p class="line y">Devasenan joined the game</p>
+      <p class="line">&lt;Devasenan&gt; Hey! I'm open to ML / CV roles in Canada and freelance projects.</p>
+      <p class="line">&lt;Devasenan&gt; Best way to reach me: <a href="mailto:devadas3727@gmail.com">devadas3727@gmail.com</a></p>
+      <p class="line">&lt;Devasenan&gt; I speak English and Tamil.</p>
+      <a class="chatbox" href="mailto:devadas3727@gmail.com"><span style="color:#aaa">&gt;</span> /msg devasenan hi, I have a project for you<span class="caret"></span></a>
+    </div>
+    <div class="contact-btns">
+      <a class="mcbtn" href="https://github.com/devasenan134">GitHub</a>
+      <a class="mcbtn" href="https://linkedin.com/in/devasenan">LinkedIn</a>
+      <a class="mcbtn" href="#" aria-disabled="true">Résumé (PDF)</a>
+    </div>
+  </div>
+</section>
+
+<footer class="tex" data-tex="bedrock"><div>© 2026 Devasenan Murugan · armor.craftingtable.cc<br>NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.</div></footer>
+
+<div id="hud">Y: 72 · Surface</div>
+<button class="mcbtn" id="daynight" aria-label="Toggle day / night"><i></i></button>
+<div id="toast" role="status" aria-live="polite"><div class="slot" data-item="book:purple" style="background:none;box-shadow:none"></div><div><div class="a">Advancement Made!</div><div class="b">Found the contact screen</div></div></div>
+<div id="tip"></div>
+
+<script>
+/* ---------- tiny pixel-art engine (all art generated here, no game assets) ---------- */
+let seed=7;const rnd=()=>((seed=Math.imul(seed^seed>>>15,2246822519)+0x9e3779b9|0)>>>0)/4294967296;
+const pick=(a)=>a[Math.floor(rnd()*a.length)];
+function canvas16(){const c=document.createElement('canvas');c.width=c.height=16;return c}
+function noise(pal,s){seed=s;const c=canvas16(),x=c.getContext('2d');for(let i=0;i<256;i++){x.fillStyle=pick(pal);x.fillRect(i%16,i/16|0,1,1)}return c}
+const BLOCK={
+  dirt:()=>noise(['#866043','#866043','#79553a','#9b7653','#5d4029','#6c4c33'],11),
+  stone:()=>noise(['#7f7f7f','#7f7f7f','#8e8e8e','#727272','#686868','#9a9a9a'],21),
+  deepslate:()=>{seed=31;const c=canvas16(),x=c.getContext('2d');for(let y=0;y<16;y++)for(let i=0;i<16;i++){x.fillStyle=pick(y%4==0?['#35353b','#3c3c43']:['#4d4d55','#45454c','#56565e','#3f3f46']);x.fillRect(i,y,1,1)}return c},
+  bedrock:()=>noise(['#575757','#2c2c2c','#7a7a7a','#161616','#444'],41),
+  grass:()=>{const c=noise(['#866043','#79553a','#9b7653','#5d4029'],51),x=c.getContext('2d');seed=52;
+    for(let i=0;i<16;i++){const d=3+(rnd()<.5?1:0)+(rnd()<.25?1:0);for(let y=0;y<d;y++){x.fillStyle=pick(['#5d9b3a','#4c8a2a','#6fb043','#57952f']);x.fillRect(i,y,1,1)}}return c},
+  planks:()=>{seed=61;const c=canvas16(),x=c.getContext('2d');for(let y=0;y<16;y++)for(let i=0;i<16;i++){x.fillStyle=(y%4==3)?'#6b5030':pick(['#b8945f','#a88654','#c4a06a','#9c7a49']);x.fillRect(i,y,1,1)}
+    x.fillStyle='#6b5030';[[4,0],[11,4],[2,8],[9,12]].forEach(([a,b])=>x.fillRect(a,b,1,3));return c},
+  redstone:()=>noise(['#b81d12','#d8311f','#8f1308','#ef4a3a','#a11a0d'],71),
+  lamp:()=>{const c=noise(['#f7c27a','#e2a35a','#fff0c2','#c9843e'],81),x=c.getContext('2d');x.fillStyle='#6d4523';for(let i=0;i<16;i++){x.fillRect(i,0,1,1);x.fillRect(i,15,1,1);x.fillRect(0,i,1,1);x.fillRect(15,i,1,1)}return c},
+  obsidian:()=>noise(['#14101e','#1f1830','#2d2346','#0d0a14','#3b2d5c'],91),
+};
+const SPR={
+gem:["................","................","....kkkkkkkk....","...kwwmmmmddk...","..kwmmmmmmmmdk..",".kwmmmmmmmmmddk.",".kmmmmmmmmmmddk.","..kmmmmmmmmddk..","...kmmmmmmmdk...","....kmmmmddk....",".....kmmddk.....","......kmdk......",".......kk.......","................"],
+ingot:["................","................","................","................",".......kkkkkkk..","......kwwmmmmmk.",".....kwmmmmmmdk.","....kwmmmmmmddk.","...kmmmmmmmddk..","..kmmmmmmmddk...","..kddddddddk....","..kkkkkkkkk.....","................"],
+book:["................","...kkkkkkkkkk...","..kmmmmmmmmmmk..","..kmwmmmmmmmmk..","..kmmmmmmmmmmk..","..kmmmmyymmmmk..","..kmmmmyymmmmk..","..kmmmmmmmmmmk..","..kmmmmmmmmmmk..","..kmmmmmmmmmmk..","..kdddddddddddk.","..kwwwwwwwwwwk..","..kkkkkkkkkkkk.."],
+dust:["................","................","......m.........","....mm.mm..m....","...mdmm.mmm.....",".....mmdmm......","..mm.mddmm.mm...","...mmmmmdmmm....","....mmdmmmm.....","..m..mmmm..m....",".....mm.mm......",".......m........"],
+orb:["................","................",".....kkkkkk.....","....kwwmmmmk....","...kwmmmmmmdk...","..kwmmmmmmmmdk..","..kmmmmmmmmmdk..","..kmmmmmmmmddk..","..kmmmmmmmddk...","...kmmmmmddk....","....kddddk......",".....kkkk......."],
+potion:["................","......kkk.......","......kwk.......",".......k........","......kmk.......",".....kwwmk......","....kwmmmmk.....","...kwmmmmmmk....","...kmmmmmmmk....","...kmmmmmmdk....","....kmmmmdk.....",".....kkkkk......"],
+paper:["................","................","...kkkkkkkk.....","...kwwwwwwwk....","...kwggggwwwk...","...kwwwwwwwwk...","...kwggggggwk...","...kwwwwwwwwk...","...kwgggggwwk...","...kwwwwwwwwk...","...kkkkkkkkkk..."],
+compass:["................","....kkkkkkk.....","...kgggggggk....","..kgddddddd gk..","..kgdddwddddgk..","..kgddrwdddd gk.","..kgdddrrdddgk..","..kgddddrddd gk.","..kgdddddddd gk.","...kggggggggk...","....kkkkkkkk...."],
+};
+const PAL={k:'#1b1b1b',w:'#ffffff',y:'#ffd33d',g:'#9a9a9a',r:'#d8311f'};
+const TINT={cyan:['#4fd8d1','#1f9e99'],green:['#41d06b','#1a8a3a'],purple:['#b07ee8','#6e3fb0'],gold:['#ffd33d','#c99016'],iron:['#e2e2e2','#9c9c9c'],
+  orange:['#f08a3a','#b45a1a'],red:['#e5484d','#9a1f1f'],aqua:['#7ff0ff','#2fb0c0'],blue:['#4f8de8','#24519c'],brown:['#9b6a3e','#5e3e22']};
+const DEFAULT={gem:'cyan',ingot:'gold',book:'brown',dust:'red',orb:'aqua',potion:'red',paper:'iron',compass:'iron'};
+const cache={};
+function sprite(spec){if(cache[spec])return cache[spec];const [n,t]=spec.split(':');const map=SPR[n];const [m,d]=TINT[t||DEFAULT[n]];
+  const c=canvas16(),x=c.getContext('2d');map.forEach((row,y)=>[...row].forEach((ch,i)=>{if(ch=='.'||ch==' ')return;const col=ch=='m'?m:ch=='d'?d:(n=='compass'&&ch=='g')?'#8a8a8a':PAL[ch];if(!col)return;x.fillStyle=col;x.fillRect(i,y+1,1,1)}));
+  return cache[spec]=c}
+const blockURL={};for(const k in BLOCK)blockURL[k]=BLOCK[k]().toDataURL();
+function iconCanvas(spec){const c=document.createElement('canvas');c.width=c.height=16;c.getContext('2d').drawImage(sprite(spec),0,0);return c}
+function blockCanvas(k){const c=canvas16();c.getContext('2d').drawImage(BLOCK[k](),0,0);return c}
+
+/* apply textures */
+document.querySelectorAll('[data-tex]').forEach(el=>{const u=blockURL[el.dataset.tex];if(el.classList.contains('logo'))el.style.backgroundImage=`linear-gradient(#fff2,#0003),url(${u})`;else el.style.backgroundImage=`url(${u})`});
+document.querySelectorAll('.mcbtn').forEach(b=>b.style.backgroundImage=`linear-gradient(#0000,#0000),url(${blockURL.stone})`)
+document.querySelectorAll('.mcbtn').forEach(b=>{b.style.backgroundSize='48px';b.style.backgroundBlendMode='multiply'});
+
+/* slots */
+function fillSlot(el){if(el.dataset.item)el.prepend(iconCanvas(el.dataset.item));else if(el.dataset.block)el.prepend(blockCanvas(el.dataset.block))}
+document.querySelectorAll('[data-grid]').forEach(g=>{g.dataset.grid.split(';').forEach(cell=>{const s=document.createElement('div');s.className='slot';
+  if(cell){const [item,name,lore]=cell.split('|');s.dataset.item=item;s.dataset.tip=name+'|'+(lore?'|'+lore:'')}g.appendChild(s)})});
+document.querySelectorAll('.slot[data-item],.slot[data-block]').forEach(fillSlot);
+
+/* inventory */
+const SK=[["Python","book:blue","Language"],["PyTorch","potion:orange","ML"],["OpenCV","orb:green","Vision"],["YOLO","gem:cyan","Vision"],["SAM","gem:green","Vision"],["Grounding DINO","gem:purple","Vision"],["Blender API","orb:orange","Synthetic data"],["Docker","ingot:iron","Tools"],["Linux","compass","Tools"],
+ ["SQL","paper","Language"],["Java","ingot:brown","Language"],["C++","ingot:iron","Language"],["Bash","book:brown","Language"],["Scikit-Learn","potion:blue","ML"],["Pandas","book:purple","ML"],["NumPy","ingot:gold","ML"],["Matplotlib","dust:aqua","ML"],["Seaborn","dust:blue","ML"],
+ ["OCR pipelines","paper","Vision"],["Segmentation","dust:green","Vision"],["Photoshop scripting","potion:blue","Synthetic data"],["Albumentations","dust:gold","Synthetic data"],["Domain randomization","dust:red","Synthetic data"],["Git / GitHub","orb:red","Tools"],["Label Studio","book:purple","Tools"],["Unsloth","potion:green","Tools"],["AWS","ingot:gold","Cloud"]];
+const inv=document.getElementById('invgrid'),hb=document.getElementById('hotbar'),held=document.getElementById('held');
+SK.slice(9).forEach(([n,it,c])=>{const s=document.createElement('div');s.className='slot';s.dataset.item=it;s.dataset.tip=n+'||'+c;fillSlot(s);inv.appendChild(s)});
+const hotSlots=SK.slice(0,9).map(([n,it,c],i)=>{const s=document.createElement('div');s.className='slot';s.dataset.item=it;s.dataset.tip=n+'||'+c;s.tabIndex=0;fillSlot(s);
+  s.onclick=s.onfocus=()=>selectHot(i);hb.appendChild(s);return s});
+function selectHot(i){hotSlots.forEach((s,j)=>s.style.outline=j==i?'3px solid #fff':'none');hotSlots[i].style.outlineOffset='-1px';held.textContent=SK[i][0]}
+selectHot(1);
+addEventListener('keydown',e=>{if(/^[1-9]$/.test(e.key)&&!e.target.closest('input,textarea'))selectHot(+e.key-1)});
+
+/* advancements */
+const ADV=[
+ {id:'kct',x:40,y:170,type:'task',item:'book:blue',t:'Getting an Education',cap:'KCT, Coimbatore',sub:'2020 – 2024',d:'B.E. Computer Science, 9.2/10'},
+ {id:'best',x:200,y:60,type:'challenge',item:'gem:cyan',t:'Best Outgoing Student',cap:'Best Outgoing Student',sub:'2020 – 2024',d:'Top of the department'},
+ {id:'merit',x:200,y:280,type:'goal',item:'ingot:gold',t:'Merit Scholarship',cap:'Mahatma Gandhi Merit',sub:'2021 – 2023',d:'Scholarship, two years'},
+ {id:'deft',x:360,y:170,type:'task',item:'orb:green',t:'Team Player',cap:'Deft & Tact',sub:'Apr – Oct 2023',d:'Project trainee. Led a team of 3 on room re-tiling'},
+ {id:'hv',x:520,y:170,type:'task',item:'orb:orange',t:'Into the Pipeline',cap:'Hyperverge',sub:'2024',d:'DL intern. Synthetic data for ID-card QC and tamper detection'},
+ {id:'far',x:440,y:30,type:'challenge',item:'gem:cyan',t:'Diamonds!',cap:'~50% FAR cut',sub:'ID-card QC',d:'~50% FAR, ~12% FRR relative reduction'},
+ {id:'k300',x:600,y:300,type:'goal',item:'gem:green',t:'Stack of Data',cap:'300K samples',sub:'tamper dataset',d:'5 classes with pixel-level masks'},
+ {id:'conc',x:690,y:170,type:'task',item:'book:purple',t:'Leveling Up',cap:'Concordia, Montreal',sub:'2025 – 2026',d:'Master of Applied CS, 3.7/4.3'},
+ {id:'dgd',x:860,y:300,type:'goal',item:'compass',t:'Mind the Gap',cap:'Domain Gap Detector',sub:'ongoing',d:'Measuring the synthetic-to-real gap'},
+ {id:'next',x:860,y:50,type:'lock',item:'potion:green',t:'???',cap:'Next: your team?',sub:'2026 →',d:'ML / CV roles in Canada + freelance'},
+];
+const LINKS=[['kct','best'],['kct','merit'],['kct','deft'],['deft','hv'],['hv','far'],['hv','k300'],['hv','conc'],['conc','dgd'],['conc','next']];
+const ac=document.getElementById('advcanvas'),svg=document.getElementById('advlines'),by={};
+ADV.forEach(a=>{by[a.id]=a;const n=document.createElement('div');n.className='node '+a.type;n.style.left=a.x+'px';n.style.top=a.y+'px';
+  n.innerHTML='<div class="fr"></div>';n.appendChild(iconCanvas(a.item));
+  n.insertAdjacentHTML('beforeend',`<div class="cap">${a.cap}<i>${a.sub}</i></div>`);
+  n.dataset.tip=`${a.t}|${a.type=='challenge'?'gold':'yellow'}|${a.d}`;ac.appendChild(n)});
+const ns='http://www.w3.org/2000/svg';
+LINKS.forEach(([p,q])=>{const A=by[p],B=by[q],mx=(A.x+B.x)/2+26,ax=A.x+26,ay=A.y+26,bx=B.x+26,byy=B.y+26;
+  [['#000',7],['#fff',3]].forEach(([c,w])=>{const pl=document.createElementNS(ns,'polyline');pl.setAttribute('points',`${ax},${ay} ${mx},${ay} ${mx},${byy} ${bx},${byy}`);
+  pl.setAttribute('fill','none');pl.setAttribute('stroke',c);pl.setAttribute('stroke-width',w);svg.appendChild(pl)})});
+
+/* tooltip */
+const tip=document.getElementById('tip');
+document.addEventListener('mouseover',e=>{const el=e.target.closest('[data-tip]');if(!el){tip.style.display='none';return}
+  const [t,cls,...lines]=el.dataset.tip.split('|');
+  tip.innerHTML=`<div class="t ${cls||''}">${t}</div>`+lines.filter(Boolean).map(l=>{const m=l.match(/^([pgb]):(.*)/);return `<div class="l ${m?m[1]:''}">${m?m[2]:l}</div>`}).join('');
+  tip.style.display='block'});
+document.addEventListener('mousemove',e=>{if(tip.style.display!='block')return;let x=e.clientX+14,y=e.clientY-12;const r=tip.getBoundingClientRect();
+  if(x+r.width>innerWidth-8)x=e.clientX-r.width-14;tip.style.left=x+'px';tip.style.top=Math.max(8,y)+'px'});
+
+/* splash */
+const SPLASH=["Synthetic data, real results!","Also try PyTorch!","100K samples!","Self-hosted!","Now with day/night!","Mind the domain gap!","Made in Montreal!","Blender-rendered!","sudo make me a model!","Open to work!"];
+const sp=document.getElementById('splash');sp.textContent=SPLASH[Math.floor(Math.random()*SPLASH.length)];
+sp.onclick=()=>{let n;do n=SPLASH[Math.floor(Math.random()*SPLASH.length)];while(n==sp.textContent);sp.textContent=n};
+
+/* stars */
+(function(){const c=document.getElementById('stars'),x=c.getContext('2d');function draw(){c.width=innerWidth;c.height=innerHeight;seed=99;x.fillStyle='#fff';
+  for(let i=0;i<160;i++){const s=rnd()<.15?3:2;x.globalAlpha=.4+rnd()*.6;x.fillRect(rnd()*c.width|0,rnd()*c.height*.7|0,s,s)}}draw();addEventListener('resize',draw)})();
+
+/* day / night */
+document.getElementById('daynight').onclick=()=>{const t=document.documentElement.dataset.theme=='day'?'night':'day';document.documentElement.dataset.theme=t;localStorage.theme=t};
+
+/* HUD depth + toast */
+const hud=document.getElementById('hud'),toast=document.getElementById('toast');let toasted=false;
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;hud.textContent=e.target.dataset.y;
+  if(e.target.id=='contact'&&!toasted){toasted=true;toast.classList.add('on');setTimeout(()=>toast.classList.remove('on'),4200)}}),{threshold:.35});
+document.querySelectorAll('[data-y]').forEach(s=>io.observe(s));
+</script>
+</body>
+</html>

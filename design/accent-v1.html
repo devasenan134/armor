@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Devasenan Murugan · ML / Computer Vision Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Silkscreen&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e1116;--panel:#151a21;--panel2:#1b212a;--ink:#ebe8e2;--muted:#8d95a3;--line:#262d38;
+  --grass:#6bbf3a;--dirt:#7a5533;--diamond:#4fd8d1;--gold:#f2c14e;--redstone:#e5484d;
+  --slot:#2a313c;--slot-hi:#3a4352;--slot-lo:#0a0d11;
+  --sans:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace;--px:"Silkscreen",var(--mono);
+}
+[data-theme=day]{
+  --bg:#f5f0e6;--panel:#fffaf1;--panel2:#f0e8d9;--ink:#1c2026;--muted:#646b76;--line:#e2d8c5;
+  --grass:#3f8f24;--diamond:#0f8f8a;--gold:#b7860b;--redstone:#c4282d;
+  --slot:#c6c6c6;--slot-hi:#ffffff;--slot-lo:#6b6b6b;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans);transition:background .4s,color .4s}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+.px{font-family:var(--px);letter-spacing:.02em}
+.muted{color:var(--muted)}
+.layer{font:12px var(--px);color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:18px}
+.layer:before{content:"";width:10px;height:10px;background:var(--c,var(--grass));box-shadow:inset -2px -2px #0005}
+section{padding:96px 0;border-top:1px solid var(--line)}
+h2{font-size:clamp(28px,4vw,40px);letter-spacing:-.03em;line-height:1.05;margin:0 0 12px;font-weight:600}
+h2 + p{margin:0 0 40px;max-width:560px}
+
+/* pixel primitives */
+.slot{width:40px;height:40px;background:var(--slot);box-shadow:inset 2px 2px var(--slot-lo),inset -2px -2px var(--slot-hi);display:grid;place-items:center;flex:none;position:relative}
+.item{width:22px;height:22px;background:var(--i);box-shadow:inset -3px -3px #0004,inset 3px 3px #fff4}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;font:500 15px var(--sans);text-decoration:none;border:2px solid var(--ink);color:var(--ink);background:none;cursor:pointer;min-height:44px}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--grass)}
+.btn:focus-visible,.toggle:focus-visible,.hot button:focus-visible{outline:3px solid var(--diamond);outline-offset:2px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:saturate(1.2) blur(6px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+nav .links{display:flex;gap:22px;font-size:14px}
+nav .links a{text-decoration:none;color:var(--muted)}nav .links a:hover{color:var(--ink)}
+.logo{display:flex;align-items:center;gap:10px;font:14px var(--px);text-decoration:none}
+.logo i{width:18px;height:18px;background:linear-gradient(var(--grass) 0 35%,var(--dirt) 35%);box-shadow:inset -2px -2px #0004}
+.toggle{width:40px;height:40px;border:2px solid var(--line);background:var(--panel);cursor:pointer;display:grid;place-items:center}
+.toggle span{width:16px;height:16px;background:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 35%,transparent)}
+[data-theme=night] .toggle span{background:#dfe6f0;box-shadow:inset -5px -3px var(--panel),0 0 0 3px #dfe6f033}
+
+/* hero */
+.hero{padding:110px 0 0;position:relative}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);border:1px solid var(--line);padding:5px 12px;margin-bottom:28px}
+.status:before{content:"";width:8px;height:8px;background:var(--grass)}
+.hero h1{font-size:clamp(44px,8vw,96px);line-height:.92;letter-spacing:-.05em;margin:0 0 28px;font-weight:700;max-width:900px}
+.hero h1 span{color:var(--muted)}
+.hero p.lede{font-size:19px;max-width:560px;color:var(--muted);margin:0 0 34px}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px}
+.ground{height:56px;margin-top:96px;background:
+  linear-gradient(var(--grass),var(--grass)) 0 0/100% 12px no-repeat,
+  repeating-linear-gradient(90deg,var(--dirt) 0 24px,color-mix(in srgb,var(--dirt) 80%,#000) 24px 48px) 0 12px/100% 44px no-repeat;
+  -webkit-mask:linear-gradient(#000 70%,transparent);mask:linear-gradient(#000 70%,transparent)}
+
+/* hotbar skills */
+.hotwrap{margin-top:56px}
+.hotlabel{font:13px var(--px);height:20px;margin-bottom:8px;color:var(--ink)}
+.hot{display:flex;gap:0;flex-wrap:wrap}
+.hot button{all:unset;cursor:pointer}
+.hot .slot{width:52px;height:52px}
+.hot .slot.sel{outline:3px solid var(--ink);outline-offset:-1px;z-index:1}
+.hot small{position:absolute;bottom:2px;right:4px;font:10px var(--px);color:#fff;text-shadow:1px 1px #000}
+
+/* projects as recipes */
+.recipes{display:grid;gap:18px}
+.recipe{display:grid;grid-template-columns:auto 1fr;gap:28px;padding:26px;background:var(--panel);border:1px solid var(--line)}
+.craft{display:flex;align-items:center;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(2,40px);gap:2px}
+.arrow{font:22px var(--px);color:var(--muted)}
+.out .slot{width:56px;height:56px}.out .item{width:32px;height:32px}
+.recipe h3{margin:0 0 4px;font-size:21px;letter-spacing:-.02em}
+.recipe .meta{font:13px var(--mono);color:var(--muted);margin-bottom:10px}
+.recipe p{margin:0 0 12px;max-width:620px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags span{font:12px var(--mono);padding:3px 8px;background:var(--panel2);border:1px solid var(--line)}
+.result{font:600 15px var(--mono);color:var(--diamond)}
+
+/* advancements */
+.adv-track{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative}
+.adv-track:before{content:"";position:absolute;left:28px;right:28px;top:27px;height:4px;background:var(--line)}
+.adv{position:relative;padding-right:16px}
+.frame{width:56px;height:56px;background:var(--slot);box-shadow:inset 3px 3px var(--slot-hi),inset -3px -3px var(--slot-lo);display:grid;place-items:center;position:relative;margin-bottom:16px}
+.frame.gold{background:var(--gold);box-shadow:inset 3px 3px #fff7,inset -3px -3px #0005}
+.frame.lock{opacity:.5;background:repeating-linear-gradient(45deg,var(--slot) 0 6px,var(--panel2) 6px 12px)}
+.adv h4{margin:0 0 2px;font-size:16px}
+.adv .when{font:12px var(--mono);color:var(--muted);margin-bottom:6px}
+.adv p{margin:0;font-size:14px;color:var(--muted)}
+.adv .won{color:var(--gold);font:11px var(--px);display:block;margin-bottom:4px}
+
+/* servers */
+.servers{border:1px solid var(--line);background:var(--panel)}
+.srv{display:grid;grid-template-columns:44px 1fr auto;gap:16px;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line)}
+.srv:last-child{border:0}
+.srv .ico{width:44px;height:44px;background:var(--i);box-shadow:inset -4px -4px #0004,inset 4px 4px #fff3}
+.srv b{font-weight:600}
+.srv .sub{font-size:14px;color:var(--muted)}
+.srv .here{font:11px var(--px);color:var(--grass)}
+
+/* contact */
+.contact{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:end}
+.mail{font-size:clamp(22px,3.4vw,36px);letter-spacing:-.03em;font-weight:600;text-decoration:none;border-bottom:3px solid var(--grass)}
+.toast{background:var(--panel);border:2px solid var(--line);padding:16px 18px;display:flex;gap:14px;align-items:center}
+.toast .t1{font:12px var(--px);color:var(--gold)}
+footer{padding:28px 0 40px;font:13px var(--mono);color:var(--muted);border-top:1px solid var(--line)}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+@media (max-width:820px){
+  nav .links{display:none}
+  .recipe{grid-template-columns:1fr}
+  .adv-track{grid-template-columns:1fr;gap:22px}.adv-track:before{display:none}
+  .adv{display:grid;grid-template-columns:56px 1fr;gap:16px}.frame{margin:0}
+  .contact{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}.btn:hover{transform:none}}
+</style>
+</head>
+<body>
+<script>document.documentElement.dataset.theme=localStorage.theme||(matchMedia('(prefers-color-scheme: light)').matches?'day':'night')</script>
+
+<nav><div class="wrap">
+  <a class="logo" href="#top"><i></i>devasenan</a>
+  <div class="links"><a href="#work">Work</a><a href="#path">Path</a><a href="#lab">Home lab</a><a href="#contact">Contact</a></div>
+  <button class="toggle" id="toggle" aria-label="Switch day / night"><span></span></button>
+</div></nav>
+
+<header class="hero" id="top"><div class="wrap">
+  <div class="status">Open to ML roles and freelance work · Montreal</div>
+  <h1>I build the data<br><span>vision models learn from.</span></h1>
+  <p class="lede">ML / Computer Vision engineer. Synthetic data pipelines, detection and segmentation, and the gap between sim and real. Master's in Applied CS at Concordia.</p>
+  <div class="ctas">
+    <a class="btn primary" href="#contact">Hire me for ML work</a>
+    <a class="btn" href="#" aria-disabled="true">Résumé (PDF)</a>
+    <a class="btn" href="https://github.com/devasenan134">GitHub</a>
+    <a class="btn" href="https://linkedin.com/in/devasenan">LinkedIn</a>
+  </div>
+
+  <div class="hotwrap">
+    <div class="hotlabel" id="hotlabel">PyTorch</div>
+    <div class="hot" id="hot" role="list"></div>
+  </div>
+</div>
+<div class="ground" aria-hidden="true"></div>
+</header>
+
+<section id="work"><div class="wrap">
+  <div class="layer" style="--c:var(--diamond)">Recipes · selected work</div>
+  <h2>What I've crafted</h2>
+  <p class="muted">Each project with the tools that went into it and what came out.</p>
+
+  <div class="recipes">
+    <article class="recipe">
+      <div class="craft"><div class="grid3">
+        <div class="slot" title="BlenderProc"><div class="item" style="--i:#e07b39"></div></div>
+        <div class="slot" title="YOLOv8"><div class="item" style="--i:#3c7ee0"></div></div>
+        <div class="slot" title="DINOv2"><div class="item" style="--i:#7a52c7"></div></div>
+        <div class="slot" title="MMD / KS-test"><div class="item" style="--i:#55c46a"></div></div>
+      </div><span class="arrow">→</span><div class="out"><div class="slot"><div class="item" style="--i:var(--diamond)"></div></div></div></div>
+      <div>
+        <h3>Synthetic-to-Real Domain Gap Detector</h3>
+        <div class="meta">Aug 2026 – ongoing · personal project</div>
+        <p>Estimates how well synthetic training data will transfer to real-world detection before a full train/eval cycle. Config-driven render → train → eval pipeline over domain-randomized YCB-V variants, a no-training gap metric (FID/KID on DINOv2 features), and a drift monitor for incoming batches.</p>
+        <div class="tags"><span>BlenderProc</span><span>YOLOv8</span><span>DINOv2</span><span>FID / KID</span><span>MMD / KS-test</span></div>
+      </div>
+    </article>
+
+    <article class="recipe">
+      <div class="craft"><div class="grid3">
+        <div class="slot" title="Blender Python API"><div class="item" style="--i:#e07b39"></div></div>
+        <div class="slot" title="Occlusion compositing"><div class="item" style="--i:#d8d8d8"></div></div>
+        <div class="slot" title="Detectors + OCR"><div class="item" style="--i:#ee4c3c"></div></div>
+        <div class="slot" title="Annotation QA"><div class="item" style="--i:#f2c14e"></div></div>
+      </div><span class="arrow">→</span><div class="out"><div class="slot"><div class="item" style="--i:var(--gold)"></div></div></div></div>
+      <div>
+        <h3>ID-card quality-check data</h3>
+        <div class="meta">Hyperverge · Data Engineer Intern (DL)</div>
+        <p>~100K Blender-rendered samples covering blur, glare and partially visible cards, plus an occlusion pipeline for cases Blender couldn't simulate. Led annotation for the QC model and had vendors re-capture printed cards to close the synthetic-to-real gap.</p>
+        <div class="result">~50% FAR and ~12% FRR relative reduction</div>
+      </div>
+    </article>
+
+    <article class="recipe">
+      <div class="craft"><div class="grid3">
+        <div class="slot" title="Image splicing"><div class="item" style="--i:#3fb7c9"></div></div>
+        <div class="slot" title="Photoshop scripting"><div class="item" style="--i:#3c7ee0"></div></div>
+        <div class="slot" title="Pixel masks"><div class="item" style="--i:#d8d8d8"></div></div>
+        <div class="slot" title="Per-sample configs"><div class="item" style="--i:#55c46a"></div></div>
+      </div><span class="arrow">→</span><div class="out"><div class="slot"><div class="item" style="--i:var(--redstone)"></div></div></div></div>
+      <div>
+        <h3>Synthetic ID-tamper dataset</h3>
+        <div class="meta">Hyperverge</div>
+        <p>Generation pipelines for a 5-class tamper dataset with pixel-level masks, using splicing and Python-driven Photoshop automation, with per-sample configs logged for reproducibility.</p>
+        <div class="result">~300K samples · 5 classes</div>
+      </div>
+    </article>
+
+    <article class="recipe">
+      <div class="craft"><div class="grid3">
+        <div class="slot" title="Grounding DINO"><div class="item" style="--i:#7a52c7"></div></div>
+        <div class="slot" title="SAM"><div class="item" style="--i:#3c7ee0"></div></div>
+        <div class="slot" title="LSUN-room layout"><div class="item" style="--i:#866043"></div></div>
+        <div class="slot" title="LAB/HSV lighting"><div class="item" style="--i:#f2c14e"></div></div>
+      </div><span class="arrow">→</span><div class="out"><div class="slot"><div class="item" style="--i:#c98b5a"></div></div></div></div>
+      <div>
+        <h3>Room re-tiling pipeline</h3>
+        <div class="meta">Deft &amp; Tact Solutions · led a team of 3</div>
+        <p>Replaces walls and floors in room photos with a chosen tile or wallpaper. Text-prompted segmentation, corner extraction from layout maps (RDP, KMeans), perspective overlay, and lighting transfer so shadows match.</p>
+        <div class="tags"><span>Grounding DINO</span><span>SAM</span><span>OpenCV</span><span>Perspective transforms</span></div>
+      </div>
+    </article>
+  </div>
+</div></section>
+
+<section id="path"><div class="wrap">
+  <div class="layer" style="--c:var(--gold)">Advancements · path so far</div>
+  <h2>Progress</h2>
+  <p class="muted">Gold frames are the milestones I'm proudest of.</p>
+  <div class="adv-track">
+    <div class="adv"><div class="frame gold"><div class="item" style="--i:#55c46a"></div></div><div><span class="won">Best Outgoing Student</span><h4>KCT, Coimbatore</h4><div class="when">2020 – 2024</div><p>B.E. Computer Science, 9.2/10. Merit scholarship 2021–23.</p></div></div>
+    <div class="adv"><div class="frame"><div class="item" style="--i:#c98b5a"></div></div><div><h4>Deft &amp; Tact</h4><div class="when">Apr – Oct 2023</div><p>Project trainee. Room re-tiling pipeline, integration and endpoints.</p></div></div>
+    <div class="adv"><div class="frame gold"><div class="item" style="--i:#4fd8d1"></div></div><div><span class="won">Diamonds!</span><h4>Hyperverge</h4><div class="when">Jan – Jun, Sep – Dec 2024</div><p>DL intern. Synthetic data for ID-card QC and tamper detection.</p></div></div>
+    <div class="adv"><div class="frame"><div class="item" style="--i:#7a52c7"></div></div><div><h4>Concordia, Montreal</h4><div class="when">Jan 2025 – Jul 2026</div><p>Master of Applied CS, 3.7/4.3.</p></div></div>
+    <div class="adv"><div class="frame lock"></div><div><h4>Next: your team?</h4><div class="when">2026 →</div><p>ML / CV roles in Canada, plus freelance projects.</p></div></div>
+  </div>
+</div></section>
+
+<section id="lab"><div class="wrap">
+  <div class="layer" style="--c:var(--redstone)">Multiplayer · home lab</div>
+  <h2>Servers I run</h2>
+  <p class="muted">I self-host my own tools at home. This site is one of them.</p>
+  <div class="servers">
+    <div class="srv"><div class="ico" style="--i:linear-gradient(var(--grass) 0 35%,var(--dirt) 35%)"></div><div><b>armor</b><div class="sub">This portfolio</div></div><span class="here">You are here</span></div>
+    <div class="srv"><div class="ico" style="--i:#e5484d"></div><div><b>reddust</b><div class="sub">Minecraft server panel</div></div><span></span></div>
+    <div class="srv"><div class="ico" style="--i:#3c7ee0"></div><div><b>lama</b><div class="sub">Self-hosted LLM (Qwen3-8B on Ollama)</div></div><span></span></div>
+    <div class="srv"><div class="ico" style="--i:#7a52c7"></div><div><b>memory</b><div class="sub">Long-term memory server for my AI agents</div></div><span></span></div>
+  </div>
+</div></section>
+
+<section id="contact"><div class="wrap">
+  <div class="layer" style="--c:var(--grass)">Join server · contact</div>
+  <div class="contact">
+    <div>
+      <h2>Have a vision or data problem?</h2>
+      <p class="muted" style="margin-bottom:24px">Hiring for ML / CV, or need help with synthetic data, detection or segmentation? Send a message.</p>
+      <a class="mail" href="mailto:devadas3727@gmail.com">devadas3727@gmail.com</a>
+    </div>
+    <div class="toast"><div class="slot"><div class="item" style="--i:var(--gold)"></div></div><div><div class="t1">Advancement made!</div><div>You found the contact section</div></div></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap"><span>© 2026 Devasenan Murugan · armor.craftingtable.cc</span><span>English · Tamil</span></div></footer>
+
+<script>
+const skills=[["Python","#3c7ee0"],["PyTorch","#ee4c3c"],["OpenCV","#55c46a"],["YOLO","#3fb7c9"],["SAM","#7a52c7"],["Blender","#e07b39"],["Docker","#2f8fd8"],["Linux","#f2c14e"],["SQL","#d8d8d8"]];
+const hot=document.getElementById('hot'),lab=document.getElementById('hotlabel');
+skills.forEach(([n,c],i)=>{const b=document.createElement('button');b.setAttribute('role','listitem');b.setAttribute('aria-label',n);
+  b.innerHTML=`<div class="slot${i==1?' sel':''}"><div class="item" style="--i:${c}"></div><small>${i+1}</small></div>`;
+  const pick=()=>{hot.querySelectorAll('.slot').forEach(s=>s.classList.remove('sel'));b.firstChild.classList.add('sel');lab.textContent=n};
+  b.onmouseenter=pick;b.onfocus=pick;b.onclick=pick;hot.appendChild(b)});
+addEventListener('keydown',e=>{if(/^[1-9]$/.test(e.key)&&!e.target.closest('input,textarea'))hot.children[e.key-1]?.click()});
+document.getElementById('toggle').onclick=()=>{const t=document.documentElement.dataset.theme==='day'?'night':'day';document.documentElement.dataset.theme=t;localStorage.theme=t};
+</script>
+</body>
+</html>
