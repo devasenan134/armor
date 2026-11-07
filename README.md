@@ -13,6 +13,7 @@ Both are plain HTML, CSS and JavaScript with no build step. All the block textur
 
 ```
 site/        what gets served
+resumes/     my résumé PDF, only on the server (git-ignored)
   index.html           main portfolio
   minecraft/index.html Minecraft edition
   assets/icons/        tech logos (Simple Icons, CC0)
@@ -35,6 +36,10 @@ cd ~/armor/deploy && docker compose up -d
 ```
 
 Caddy serves `site/` on `127.0.0.1:8150`, and a Cloudflare tunnel route points `armor.craftingtable.cc` at it. To update, `git pull`; Caddy serves the new files immediately.
+
+### Résumé
+
+Put one PDF in `~/armor/resumes/` on the server. It's served under `/resume/`, and the Résumé buttons on both editions find it and link to it on page load. The folder is ignored by git, so swapping the file needs no commit and `git pull` never touches it.
 
 ## Credits
 

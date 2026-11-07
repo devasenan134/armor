@@ -294,7 +294,7 @@ footer .legal{color:#9a9a9a;font-size:12px;max-width:520px}
       <div class="ctas">
         <a class="btn" href="#contact"><canvas data-item="gem:cyan" width="16" height="16"></canvas>Hire me</a>
         <a class="btn ghost" href="#projects">See projects</a>
-        <a class="btn ghost" href="#" aria-disabled="true">Résumé</a>
+        <a data-resume class="btn ghost" href="#" aria-disabled="true">Résumé</a>
       </div>
       <div class="splash" id="splash" title="Click for another"></div>
     </div>
@@ -670,6 +670,13 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.targ
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 const toast=document.getElementById('toast');let done=false;
 new IntersectionObserver(es=>{if(es[0].isIntersecting&&!done){done=true;toast.classList.add('on');setTimeout(()=>toast.classList.remove('on'),4200)}},{threshold:.4}).observe(document.getElementById('contact'));
+</script>
+<script>
+/* resume: link the single PDF dropped into the server's resumes folder */
+fetch('/resume/',{headers:{Accept:'application/json'}}).then(r=>r.ok?r.json():[]).then(list=>{
+  const f=(list||[]).find(x=>!x.is_dir&&/\.pdf$/i.test(x.name));if(!f)return;
+  document.querySelectorAll('[data-resume]').forEach(a=>{a.href='/resume/'+encodeURIComponent(f.name);a.removeAttribute('aria-disabled');a.target='_blank';a.rel='noopener'})
+}).catch(()=>{});
 </script>
 </body>
 </html>

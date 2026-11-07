@@ -8,3 +8,4 @@ services:
     volumes:
       - ../site:/srv:ro,z
       - ./Caddyfile:/etc/caddy/Caddyfile:ro,z
+      - ../resumes:/resumes:ro,z

@@ -4,9 +4,19 @@
 }
 
 :80 {
-	root * /srv
 	encode zstd gzip
-	file_server
+
+	redir /resume /resume/ 308
+	handle_path /resume/* {
+		root * /resumes
+		header Cache-Control "no-cache"
+		file_server browse
+	}
+
+	handle {
+		root * /srv
+		file_server
+	}
 
 	header {
 		X-Content-Type-Options nosniff
