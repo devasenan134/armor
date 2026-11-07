@@ -10,7 +10,9 @@
 	handle_path /resume/* {
 		root * /resumes
 		header Cache-Control "no-cache"
-		file_server browse
+		file_server browse {
+			hide .*
+		}
 	}
 
 	handle {
