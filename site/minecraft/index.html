@@ -19,8 +19,8 @@
   --sky1:#6fa8ff;--sky2:#cfe3ff;--glow:#ffffff66;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;overflow-x:clip}
-body{margin:0;overflow-x:hidden;background:var(--bg);color:var(--ink);font:16px/1.65 var(--body);transition:background .5s,color .5s;-webkit-font-smoothing:antialiased}
+html,body{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 var(--body);-webkit-font-smoothing:antialiased}
 a{color:inherit}
 img,canvas{image-rendering:pixelated}
 .wrap{max-width:1140px;margin:0 auto;padding:0 28px}
@@ -29,13 +29,21 @@ h1,h2,h3,.head{font-family:var(--head);font-weight:800;letter-spacing:-.025em}
 /* ---------- buttons (Ore-UI style) ---------- */
 .btn{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 22px;font:700 16px var(--head);letter-spacing:0;text-decoration:none;cursor:pointer;
   color:#fff;background:var(--green);border:2px solid var(--green-lo);box-shadow:inset 0 -5px 0 var(--green-lo),inset 0 2px 0 #ffffff33;transition:transform .08s,background .15s}
-.btn:hover{background:var(--green-hi)}
-.btn:active{transform:translateY(2px);box-shadow:inset 0 -2px 0 var(--green-lo)}
 .btn.ghost{background:var(--panel2);color:var(--ink);border-color:var(--edge);box-shadow:inset 0 -5px 0 var(--edge),inset 0 2px 0 var(--hi)}
-.btn.ghost:hover{background:var(--panel)}
+.btn:active{transform:translateY(2px);box-shadow:inset 0 -2px 0 var(--green-lo)}
 .btn[aria-disabled=true]{opacity:.5;pointer-events:none}
 .btn:focus-visible,.navlink:focus-visible,.toggle:focus-visible,.slot:focus-visible{outline:3px solid var(--aqua);outline-offset:3px}
 .btn canvas{width:20px;height:20px}
+
+@media (hover:hover) and (pointer:fine){
+  .btn:hover{background:var(--green-hi)}
+  .btn.ghost:hover{background:var(--panel)}
+  .proj:hover{transform:translateY(-4px)}
+  .ctabs button:hover{color:var(--ink)}
+  .ctile:hover{border-color:var(--ink);transform:translateY(-2px)}
+  .srv:hover{background:var(--panel2)}
+  .chatbox:hover{background:#ffffff22}
+}
 
 /* ---------- nav ---------- */
 nav{position:fixed;inset:0 0 auto;z-index:20;transition:background .3s,border-color .3s;border-bottom:2px solid transparent}
@@ -257,13 +265,45 @@ footer .wrap{position:relative;display:flex;justify-content:space-between;gap:20
 footer .legal{color:#9a9a9a;font-size:12px;max-width:520px}
 @media (max-width:900px){#depth{display:none}}
 
+.adv-hint{display:none;font:500 12px var(--body);color:var(--muted);padding:8px 12px;text-align:right}
+
 @media (max-width:900px){
   .navlinks{display:none}
-  .hero .wrap{grid-template-columns:1fr}.scene{width:500px;height:460px;zoom:.6;margin:10px auto -20px}
-  .projects{grid-template-columns:1fr}.craft{zoom:.82}.proj{padding:20px}.proj.wide{grid-column:auto;grid-template-columns:1fr}
+  .hero .wrap{grid-template-columns:1fr}
+  .scene{width:100%;max-width:380px;height:280px;margin:10px auto -10px;transform:scale(.72);transform-origin:center top}
+  .projects{grid-template-columns:1fr}
+  .craft{transform:scale(.85);transform-origin:left center;margin-bottom:-10px;max-width:100%}
+  .proj{padding:20px}.proj.wide{grid-column:auto;grid-template-columns:1fr}
   .skills{grid-template-columns:1fr}.heldp{flex-direction:row;align-items:center;gap:16px}.heldp canvas{width:56px;height:56px;margin:0}.armor{grid-template-columns:repeat(4,48px)}
   .invgrid,.hotbar{grid-template-columns:repeat(9,minmax(0,1fr))}.invgrid .slot,.hotbar .slot{width:auto;aspect-ratio:1;height:auto}
   .lab,.contact{grid-template-columns:1fr}
+  .adv-hint{display:block}
+}
+
+@media (max-width:640px){
+  .wrap{padding:0 18px}
+  .hero{padding:90px 0 40px;min-height:auto}
+  .hero h1{font-size:clamp(30px,8vw,42px);line-height:1.05;margin:0 0 14px}
+  .hero h1 small{font-size:15px;margin-top:10px}
+  .hero .lede{font-size:16px;margin:0 0 24px}
+  .pill{font-size:12px;padding:5px 10px;margin-bottom:18px}
+  .splash{font-size:14px;margin-top:18px}
+  section{padding:60px 0}
+  h2{font-size:clamp(24px,7vw,36px);margin:0 0 10px}
+  .intro{font-size:15px;margin:0 0 32px}
+  .craft{transform:scale(.78);margin-bottom:-16px}
+  .proj{padding:16px}
+  .proj h3{font-size:20px}
+  .held{font-size:22px}
+  .invp{padding:14px}
+  .ctabs button{padding:10px 14px;font-size:13px}
+  .ctiles{padding:14px;grid-template-columns:1fr}
+  .srv{grid-template-columns:48px 1fr auto;gap:12px;padding:8px}
+  .srv .ico{width:48px;height:48px}
+  .srv .nm{font-size:16px}
+  .srv .motd{font-size:13px}
+  .chat{font-size:13.5px}
+  #toast{width:calc(100vw - 36px);right:18px;top:74px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
 </style>
@@ -645,13 +685,13 @@ function layout(){
     else svg.innerHTML=`<path d="${steps(W,H,500+i*41,4)}" fill="${top}"/>`;
     el.prepend(svg)});
 }
-function parallax(){const vh=innerHeight;floaters.forEach(({w,sp})=>{const r=w.parentElement.getBoundingClientRect();const off=(r.top+r.height/2-vh/2)*sp;w.style.transform=`translate3d(0,${off.toFixed(1)}px,0)`})}
+function parallax(){if(window.innerWidth<=900||matchMedia('(prefers-reduced-motion: reduce)').matches)return;const vh=innerHeight;floaters.forEach(({w,sp})=>{const r=w.parentElement.getBoundingClientRect();const off=(r.top+r.height/2-vh/2)*sp;w.style.transform=`translate3d(0,${off.toFixed(1)}px,0)`})}
 build();
 /* depth meter */
 const ycol=document.getElementById('ycol');
 [{tex:'grass',name:'Surface'},...LAYERS].forEach(L=>{const c=C16();c.getContext('2d').drawImage(TEXC[L.tex],0,0);c.dataset.name=L.name||'Surface';ycol.appendChild(c)});
 const depth=document.getElementById('depth'),ylvl=document.getElementById('ylvl'),ynm=document.getElementById('ynm'),ymk=document.getElementById('ymk');
-function meter(){const secs=LAYERS.map(L=>document.getElementById(L.id));const mid=scrollY+innerHeight*.5;const hero=document.getElementById('top');
+function meter(){if(window.innerWidth<=900)return;const secs=LAYERS.map(L=>document.getElementById(L.id));const mid=scrollY+innerHeight*.5;const hero=document.getElementById('top');
   let y,idx=0,frac=0;const s0=secs[0].getBoundingClientRect().top+scrollY;
   if(mid<s0){frac=Math.max(0,mid/s0);y=80-(80-63)*frac;idx=0}
   else{for(let i=0;i<secs.length;i++){const t=secs[i].getBoundingClientRect().top+scrollY,b=t+secs[i].offsetHeight;if(mid<b||i==secs.length-1){frac=Math.min(1,Math.max(0,(mid-t)/(b-t)));y=LAYERS[i].y0+(LAYERS[i].y1-LAYERS[i].y0)*frac;idx=i+1;break}}}
@@ -661,11 +701,32 @@ let raf=0;addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(()=>{
 let lastW=0;new ResizeObserver(()=>{const w=document.documentElement.clientWidth;if(w!==lastW){lastW=w;layout()}meter();parallax()}).observe(document.body);
 document.fonts.ready.then(()=>{layout();meter();parallax()});
 
+/* smooth in-page link navigation */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const id=a.getAttribute('href');if(!id||id==='#')return;
+    const target=document.querySelector(id);
+    if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth'});if(history.pushState)history.pushState(null,'',id)}
+  });
+});
+
 /* theme */
 document.getElementById('toggle').onclick=()=>{const t=document.documentElement.dataset.theme=='day'?'night':'day';const sk=document.getElementById('sky');sk.classList.add('dusking');setTimeout(()=>sk.classList.remove('dusking'),1300);document.documentElement.dataset.theme=t;localStorage.theme=t;layout()};
 
 /* nav + reveal + toast */
-const nav=document.getElementById('nav');const onS=()=>nav.classList.toggle('solid',scrollY>40);addEventListener('scroll',onS,{passive:true});onS();
+const nav=document.getElementById('nav');
+let isSolid=false,ticking=false;
+const onS=()=>{
+  if(!ticking){
+    requestAnimationFrame(()=>{
+      const next=window.scrollY>20;
+      if(next!==isSolid){isSolid=next;nav.classList.toggle('solid',isSolid)}
+      ticking=false;
+    });
+    ticking=true;
+  }
+};
+window.addEventListener('scroll',onS,{passive:true});onS();
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 const toast=document.getElementById('toast');let done=false;
