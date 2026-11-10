@@ -7,7 +7,11 @@ Only the tagline and domain live in tools/og/og.json.
 
     python3 tools/og/build.py           # render if inputs changed
     python3 tools/og/build.py --force   # render regardless
-    python3 tools/og/build.py --check   # exit 1 if og.png is stale (no render)
+    python3 tools/og/build.py --check   # exit 1 if og.png or its URL version is stale (no writes)
+
+The og:image URL in both pages carries ?v=<hash of og.png>, rewritten whenever
+the image changes, so LinkedIn, Slack and WhatsApp refetch a new image instead
+of serving a cached one.
 
 Needs python3 (standard library only) and one Chromium-based browser
 (Playwright's Chromium, Chrome, Chromium or Brave). Fonts load from
@@ -19,6 +23,8 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 HERE = pathlib.Path(__file__).resolve().parent
 PAGE = ROOT / "site" / "index.html"
 OUT = ROOT / "site" / "assets" / "og.png"
+PAGES = [ROOT / "site" / "index.html", ROOT / "site" / "minecraft" / "index.html"]
+OG_META = re.compile(r'(<meta property="og:image" content="[^"]*?/assets/og\.png)(?:\?v=[0-9a-f]+)?(")')
 STAMP = HERE / ".last-build"
 
 
@@ -93,19 +99,42 @@ def render(inp):
         OUT.write_bytes(shot.read_bytes())
 
 
+def sync_urls(write):
+    """Make every page's og:image URL carry the current image hash."""
+    v = hashlib.sha256(OUT.read_bytes()).hexdigest()[:8]
+    stale = []
+    for p in PAGES:
+        src = p.read_text(encoding="utf-8")
+        if not OG_META.search(src):
+            sys.exit(f"No og:image meta found in {p.relative_to(ROOT)}")
+        out = OG_META.sub(lambda m: f"{m.group(1)}?v={v}{m.group(2)}", src)
+        if out != src:
+            stale.append(p)
+            if write:
+                p.write_text(out, encoding="utf-8")
+    return v, stale
+
+
 def main():
     inp = read_inputs()
     d = digest(inp)
-    fresh = STAMP.exists() and STAMP.read_text().strip() == d and OUT.exists()
+    inputs_ok = OUT.exists() and (not STAMP.exists() or STAMP.read_text().strip() == d)
     if "--check" in sys.argv:
-        print("og.png is up to date" if fresh else "og.png is STALE: run tools/og/build.py")
-        sys.exit(0 if fresh else 1)
-    if fresh and "--force" not in sys.argv:
-        print("og.png already matches the page; nothing to do")
-        return
-    render(inp)
-    STAMP.write_text(d + "\n")
-    print(f"rendered {OUT.relative_to(ROOT)}: {inp['line1']} / {inp['line2']}")
+        if not OUT.exists():
+            print("og.png is missing")
+            sys.exit(1)
+        v, stale = sync_urls(False)
+        ok = inputs_ok and not stale
+        print(f"og.png is up to date (v={v})" if ok else "og.png or its URL version is STALE: run tools/og/build.py")
+        sys.exit(0 if ok else 1)
+    if inputs_ok and STAMP.exists() and "--force" not in sys.argv:
+        print("og.png already matches the page; no render needed")
+    else:
+        render(inp)
+        STAMP.write_text(d + "\n")
+        print(f"rendered {OUT.relative_to(ROOT)}: {inp['line1']} / {inp['line2']}")
+    v, stale = sync_urls(True)
+    print(f"og:image version v={v}; updated {len(stale)} page(s)")
 
 
 if __name__ == "__main__":
