@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Devasenan Murugan · ML / Computer Vision Engineer</title>
-<meta name="description" content="Devasenan Murugan, ML / Computer Vision engineer in Montreal. Synthetic data pipelines, detection and segmentation.">
+<meta name="description" content="Devasenan Murugan, ML / Computer Vision engineer in Montreal. Synthetic data, image pipelines and evaluation for vision models.">
 <link rel="canonical" href="https://armor.craftingtable.cc/minecraft/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Devasenan Murugan">
 <meta property="og:title" content="Devasenan Murugan · ML / Computer Vision Engineer">
-<meta property="og:description" content="Synthetic data pipelines, detection and segmentation, and measuring the gap between sim and real. Based in Montreal.">
+<meta property="og:description" content="Synthetic data, image pipelines, and measuring the gap between synthetic and real images. Based in Montreal.">
 <meta property="og:url" content="https://armor.craftingtable.cc/minecraft/">
 <meta property="og:image" content="https://armor.craftingtable.cc/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Devasenan Murugan, ML / Computer Vision Engineer. I build the data vision models learn from.">
+<meta property="og:image:alt" content="Devasenan Murugan, ML / Computer Vision Engineer.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&family=Silkscreen&display=swap" rel="stylesheet">
@@ -341,7 +341,7 @@ footer .legal{color:#9a9a9a;font-size:12px;max-width:520px}
     <div>
       <div class="pill"><i></i>Open to ML / CV roles and freelance · Montreal</div>
       <h1>Devasenan Murugan<small>ML / Computer Vision Engineer</small></h1>
-      <p class="lede">I build synthetic data pipelines and vision models, and I measure the gap between sim and real. Master's in Applied CS at Concordia.</p>
+      <p class="lede">I build synthetic data and image pipelines for vision models, and I'm building a tool to measure the gap between synthetic and real images. Master of Applied Computer Science, Concordia (2026).</p>
       <div class="ctas">
         <a class="btn" href="#contact"><canvas data-item="gem:cyan" width="16" height="16"></canvas>Hire me</a>
         <a class="btn ghost" href="#projects">See projects</a>
@@ -373,12 +373,12 @@ footer .legal{color:#9a9a9a;font-size:12px;max-width:520px}
       <div class="craft">
         <div class="g3" data-grid="orb:orange|BlenderProc|Domain-randomized renders;gem:cyan|YOLOv8|Ultralytics detector;orb:orange|BlenderProc|;dust:aqua|FID / KID|No-training gap metric;gem:purple|DINOv2|Feature backbone;dust:aqua|FID / KID|;ingot:iron|YCB-V objects|Benchmark objects;dust:red|MMD / KS-test|Drift monitor;ingot:iron|YCB-V objects|"></div>
         <div class="arrow"></div>
-        <div class="out"><div class="slot" data-item="compass" data-tip="Domain Gap Detector|aqua|Measures the synthetic-to-real gap|before a full train/eval cycle"></div></div>
+        <div class="out"><div class="slot" data-item="compass" data-tip="Domain Gap Detector|aqua|Goal: measure the synthetic-to-real gap|before a full train/eval cycle (in progress)"></div></div>
       </div>
       <div>
-        <div class="meta">Aug 2026 – ongoing · personal project</div>
+        <div class="meta">Aug 2026 – ongoing · personal project · in progress</div>
         <h3>Synthetic-to-Real Domain Gap Detector</h3>
-        <p>Estimates how well synthetic training data will transfer to real-world detection before you commit to a full train/eval cycle. A config-driven render → train → eval pipeline over domain-randomized YCB-V variants, a no-training gap metric (FID/KID on DINOv2 features), and a drift monitor that flags shifts in incoming batches.</p>
+        <p>Goal: estimate how well synthetic training data will transfer to real-world detection before a full train/eval cycle. Built: a config-driven render → train → eval pipeline over domain-randomized YCB-V variants. In progress: a no-training gap metric (FID/KID on DINOv2 features) and a drift monitor for incoming batches. Results not yet published.</p>
         <div class="chips"><span>BlenderProc</span><span>YOLOv8</span><span>DINOv2</span><span>FID / KID</span><span>MMD / KS-test</span></div>
       </div>
     </article>
@@ -387,13 +387,13 @@ footer .legal{color:#9a9a9a;font-size:12px;max-width:520px}
       <div class="craft">
         <div class="g3" data-grid="orb:orange|Blender Python API|~100K rendered samples;orb:orange|Blender Python API|;orb:orange|Blender Python API|;paper|Occlusion compositing|Finger and object cutouts;gem:cyan|Card / text / photo detectors|In-house models;paper|OCR|;book:purple|Annotation QA|Guidelines, taxonomy, calibration;ingot:gold|Real re-captures|Vendors photographed printed cards;book:purple|Annotation QA|"></div>
         <div class="arrow"></div>
-        <div class="out"><div class="slot" data-item="gem:cyan" data-tip="ID-card quality-check data|aqua|Hyperverge|g:~50% FAR, ~12% FRR reduction"></div></div>
+        <div class="out"><div class="slot" data-item="gem:cyan" data-tip="ID-card quality-check data|aqua|Hyperverge|g:Contributed to ~50% FAR, ~12% FRR relative reductions"></div></div>
       </div>
       <div>
-        <div class="meta">Hyperverge · Data Engineer Intern (DL)</div>
+        <div class="meta">Hyperverge · Data Engineer Intern</div>
         <h3>ID-card quality-check data</h3>
         <p>~100K Blender-rendered samples covering blur, glare and partially visible cards, plus an occlusion pipeline for cases Blender couldn't simulate. Led annotation for the QC model and had vendors re-capture printed cards to close the gap.</p>
-        <div class="stat">~50% FAR · ~12% FRR relative reduction</div>
+        <div class="stat">Contributed to ~50% FAR · ~12% FRR relative reductions</div>
       </div>
     </article>
 
@@ -462,7 +462,7 @@ footer .legal{color:#9a9a9a;font-size:12px;max-width:520px}
     </div>
     <div class="why reveal">
       <p>I run my own home lab: Docker on Linux, Cloudflare tunnels, a local GPU for LLMs, and the services above, including the box that serves this page.</p>
-      <p>It's where I try things before they reach production: serving models, wiring agents to memory, and keeping it all up.</p>
+      <p>It's where I try things out: hosting a local LLM, wiring AI agents to memory, and keeping services running.</p>
       <a class="btn ghost" href="https://github.com/devasenan134">See it on GitHub</a>
     </div>
   </div>
@@ -571,7 +571,7 @@ document.querySelectorAll('div.slot[data-item],div.slot[data-block]').forEach(fi
 
 /* skills: creative tabs with real logos pixelated (Simple Icons, CC0) */
 const LOGO={Python:'python',PyTorch:'pytorch',OpenCV:'opencv',Docker:'docker',Linux:'linux','Git / GitHub':'git','Scikit-Learn':'scikitlearn',Pandas:'pandas',NumPy:'numpy','Blender Python API':'blender','C++':'cplusplus',Java:'openjdk',Bash:'gnubash','YOLO (Ultralytics)':'ultralytics','SAM':'meta','DINOv2':'meta'};
-const BADGE={SQL:'#4f8de8','Grounding DINO':'#b07ee8','OCR pipelines':'#cfcfcf',Segmentation:'#41d06b','Perspective transforms':'#3fb7c9','Photoshop scripting':'#31a8ff',Albumentations:'#f08a3a','Domain randomization':'#e5484d',Matplotlib:'#3b7bbf',Seaborn:'#4c72b0','Label Studio':'#f75a2b',Unsloth:'#41d06b',AWS:'#ff9900','Data-centric AI':'#ffd33d'};
+const BADGE={SQL:'#4f8de8','Grounding DINO':'#b07ee8','OCR pipelines':'#cfcfcf',Segmentation:'#41d06b','Perspective transforms':'#3fb7c9','Photoshop scripting':'#31a8ff',Albumentations:'#f08a3a','Domain randomization':'#e5484d',Matplotlib:'#3b7bbf',Seaborn:'#4c72b0','Label Studio':'#f75a2b',Unsloth:'#41d06b','AWS (coursework)':'#ff9900','Data-centric AI':'#ffd33d'};
 function logo(name){const c=C16(),x=c.getContext('2d');
   if(LOGO[name]){const im=new Image();im.onload=()=>{x.imageSmoothingEnabled=true;x.drawImage(im,1,1,14,14);
     try{const d=x.getImageData(0,0,16,16);for(let i=3;i<d.data.length;i+=4)d.data[i]=d.data[i]>90?255:0;x.putImageData(d,0,0)}catch(e){}};im.src='../assets/icons/'+LOGO[name]+'.svg'}
@@ -583,7 +583,7 @@ const CATS=[
  ['ML & data','potion:orange',['PyTorch','Scikit-Learn','Pandas','NumPy','Matplotlib','Seaborn','Data-centric AI']],
  ['Computer vision','gem:cyan',['OpenCV','YOLO (Ultralytics)','SAM','Grounding DINO','DINOv2','OCR pipelines','Segmentation','Perspective transforms']],
  ['Synthetic data','orb:orange',['Blender Python API','Photoshop scripting','Albumentations','Domain randomization']],
- ['Tools','pick',['Git / GitHub','Docker','Linux','Label Studio','Unsloth','AWS']],
+ ['Tools','pick',['Git / GitHub','Docker','Linux','Label Studio','Unsloth','AWS (coursework)']],
 ];
 const ctabs=document.getElementById('ctabs'),ctiles=document.getElementById('ctiles');
 const ALL=['All','compass',CATS.flatMap(c=>c[2].map(n=>[n,c[0]]))];
@@ -600,14 +600,14 @@ showCat(0);
 /* advancements */
 const ADV=[
  {id:'kct',x:40,y:180,type:'task',item:'book:blue',t:'Getting an Education',cap:'KCT, Coimbatore',sub:'2020 – 2024',d:'B.E. Computer Science, 9.2/10'},
- {id:'best',x:210,y:50,type:'challenge',item:'gem:cyan',t:'Best Outgoing Student',cap:'Best Outgoing Student',sub:'department award',d:'Top of the department, 2020 – 2024'},
+ {id:'best',x:210,y:50,type:'challenge',item:'gem:cyan',t:'Best Outgoing Student',cap:'Best Outgoing Student',sub:'department award',d:'Best Outgoing Student of the Department, 2020 – 2024'},
  {id:'merit',x:210,y:310,type:'goal',item:'ingot:gold',t:'Merit Scholarship',cap:'Merit Scholarship',sub:'2021 – 2023',d:'Mahatma Gandhi Merit Scholarship, two years'},
  {id:'deft',x:380,y:180,type:'task',item:'orb:green',t:'Team Lead',cap:'Deft & Tact',sub:'Apr – Oct 2023',d:'Project trainee. Led a team of 3 on room re-tiling'},
- {id:'hv',x:550,y:180,type:'task',item:'orb:orange',t:'Into the Pipeline',cap:'Hyperverge',sub:'2024',d:'DL intern. Synthetic data for ID-card QC and tamper detection'},
- {id:'far',x:470,y:40,type:'challenge',item:'gem:cyan',t:'Diamonds!',cap:'~50% FAR cut',sub:'ID-card QC',d:'~50% FAR, ~12% FRR relative reduction'},
+ {id:'hv',x:550,y:180,type:'task',item:'orb:orange',t:'Into the Pipeline',cap:'Hyperverge',sub:'2024',d:'Data Engineer Intern. Synthetic data for ID-card QC and tamper detection'},
+ {id:'far',x:470,y:40,type:'challenge',item:'gem:cyan',t:'Diamonds!',cap:'FAR / FRR down',sub:'contributed · ID-card QC',d:'Contributed to ~50% FAR, ~12% FRR relative reductions'},
  {id:'k300',x:630,y:320,type:'goal',item:'gem:green',t:'Stack of Data',cap:'300K samples',sub:'tamper dataset',d:'5 classes with pixel-level masks'},
- {id:'conc',x:720,y:180,type:'task',item:'book:purple',t:'Leveling Up',cap:'Concordia, Montreal',sub:'2025 – 2026',d:'Master of Applied CS, 3.7/4.3'},
- {id:'dgd',x:900,y:320,type:'goal',item:'compass',t:'Mind the Gap',cap:'Domain Gap Detector',sub:'ongoing',d:'Measuring the synthetic-to-real gap'},
+ {id:'conc',x:720,y:180,type:'task',item:'book:purple',t:'Leveling Up',cap:'Concordia, Montreal',sub:'2025 – 2026',d:'Master of Applied CS, 3.7/4.3 · completed 2026'},
+ {id:'dgd',x:900,y:320,type:'goal',item:'compass',t:'Mind the Gap',cap:'Domain Gap Detector',sub:'ongoing',d:'Building a way to measure the synthetic-to-real gap (in progress)'},
  {id:'next',x:900,y:50,type:'lock',item:'potion:green',t:'???',cap:'Next: your team?',sub:'2026 →',d:'ML / CV roles in Canada, plus freelance'},
 ];
 const LINKS=[['kct','best'],['kct','merit'],['kct','deft'],['deft','hv'],['hv','far'],['hv','k300'],['hv','conc'],['conc','dgd'],['conc','next']];

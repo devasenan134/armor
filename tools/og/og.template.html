@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1200px;height:630px;overflow:hidden}
+body{background:#09090b;color:#fafafa;font:400 16px/1.2 "Geist",system-ui,sans-serif;-webkit-font-smoothing:antialiased;position:relative}
+.grid{position:absolute;inset:0;opacity:.7;
+  background-image:linear-gradient(#232328 1px,transparent 1px),linear-gradient(90deg,#232328 1px,transparent 1px);background-size:64px 64px;
+  -webkit-mask:radial-gradient(ellipse 80% 70% at 30% 30%,#000 20%,transparent 75%);mask:radial-gradient(ellipse 80% 70% at 30% 30%,#000 20%,transparent 75%)}
+.top{position:absolute;left:80px;right:80px;top:72px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:14px;font-weight:600;font-size:23px}
+.brand b{display:grid;place-items:center;width:46px;height:46px;border:1px solid #2f2f36;border-radius:12px;background:#0d0d0f;font:500 18px "Geist Mono",monospace}
+.chip{display:inline-flex;align-items:center;gap:12px;padding:10px 18px 10px 12px;border:1px solid #2f2f36;border-radius:999px;font-size:18px;color:#a1a1aa;background:#111113}
+.chip i{width:16px;height:16px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.22)}
+h1{position:absolute;left:80px;right:80px;top:232px;font-weight:600;letter-spacing:-.04em;line-height:1.02;font-size:__H1_SIZE__px}
+h1 span{display:block;color:#787882}
+.tag{position:absolute;left:80px;right:80px;top:432px;font-size:26px;color:#a1a1aa;letter-spacing:-.005em}
+.rule{position:absolute;left:80px;right:80px;top:508px;height:1px;background:#232328}
+.foot{position:absolute;left:80px;right:80px;top:534px;display:flex;justify-content:space-between;font:500 19px "Geist Mono",monospace}
+.foot .l{color:#fafafa}
+.foot .r{color:#787882;text-transform:uppercase;letter-spacing:.05em}
+</style>
+</head>
+<body>
+<div class="grid"></div>
+<div class="top"><div class="brand"><b>__INITIALS__</b>__NAME__</div><div class="chip"><i></i>__CHIP__</div></div>
+<h1>__H1_LINE1__<span>__H1_LINE2__</span></h1>
+<div class="tag">__TAGLINE__</div>
+<div class="rule"></div>
+<div class="foot"><span class="l">__DOMAIN__</span><span class="r">__LOCATION__</span></div>
+</body>
+</html>

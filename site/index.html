@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Devasenan Murugan · ML / Computer Vision Engineer</title>
-<meta name="description" content="Devasenan Murugan, ML / Computer Vision engineer in Montreal. Synthetic data pipelines, detection and segmentation.">
+<meta name="description" content="Devasenan Murugan, ML / Computer Vision engineer in Montreal. Synthetic data, image pipelines and evaluation for vision models.">
 <link rel="canonical" href="https://armor.craftingtable.cc/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Devasenan Murugan">
 <meta property="og:title" content="Devasenan Murugan · ML / Computer Vision Engineer">
-<meta property="og:description" content="Synthetic data pipelines, detection and segmentation, and measuring the gap between sim and real. Based in Montreal.">
+<meta property="og:description" content="Synthetic data, image pipelines, and measuring the gap between synthetic and real images. Based in Montreal.">
 <meta property="og:url" content="https://armor.craftingtable.cc/">
 <meta property="og:image" content="https://armor.craftingtable.cc/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Devasenan Murugan, ML / Computer Vision Engineer. I build the data vision models learn from.">
+<meta property="og:image:alt" content="Devasenan Murugan, ML / Computer Vision Engineer.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -213,8 +213,8 @@ footer a{color:var(--muted);text-decoration:none}
   <div class="grid-bg"></div>
   <div class="wrap" style="position:relative">
     <span class="chip"><i></i>Open to ML / CV roles and freelance · Montreal, QC</span>
-    <h1>I build the data<br><span>vision models learn from.</span></h1>
-    <p class="lede">ML / Computer Vision engineer. Synthetic data pipelines, detection and segmentation, and measuring the gap between sim and real. Master's in Applied CS at Concordia.</p>
+    <h1>From raw images<br><span>to reliable vision systems.</span></h1>
+    <p class="lede">ML / Computer Vision engineer. I build synthetic data and image pipelines for vision models and measure whether they hold up on real images. At Hyperverge I built the data and annotation workflows behind ID-card quality checks and tamper detection; I'm now building a tool to estimate synthetic-to-real transfer. Master of Applied Computer Science, Concordia (2026).</p>
     <div class="row">
       <a class="btn solid" href="#contact">Get in touch
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
@@ -236,13 +236,13 @@ footer a{color:var(--muted);text-decoration:none}
 <!-- HOW I WORK -->
 <section id="how"><div class="wrap">
   <div class="label">How I work</div>
-  <h2 class="reveal">One loop, <span>end to end.</span></h2>
-  <p class="intro reveal">Most of my work lives in one cycle: make the data, train on it, check it holds up on real images, and run it somewhere.</p>
+  <h2 class="reveal">From raw data to <span>a model you can trust.</span></h2>
+  <p class="intro reveal">My work sits between raw images and a trustworthy model: building the data, checking whether it holds up on real images, and finding what's missing. The data and error-analysis work is from Hyperverge; the training and gap-measurement work is in my own projects.</p>
   <div class="pipe reveal">
     <div class="track"></div><div class="dot"></div>
     <div class="stage"><div class="node"></div><div class="n">01 / render</div><h3>Synthetic data</h3><p>Rendered and composited datasets when real data is scarce, costly or private.</p><div class="tools">Blender Python API<br>BlenderProc · Photoshop API<br>Albumentations · Augraphy</div></div>
-    <div class="stage"><div class="node"></div><div class="n">02 / train</div><h3>Vision models</h3><p>Detection, segmentation and OCR, from pretrained foundations to fine-tuned models.</p><div class="tools">PyTorch · YOLOv8<br>Grounding DINO · SAM<br>OpenCV · Scikit-Learn</div></div>
-    <div class="stage"><div class="node"></div><div class="n">03 / eval</div><h3>Mind the gap</h3><p>Measure how synthetic data transfers to the real world, and catch drift before it costs a training run.</p><div class="tools">FID / KID · DINOv2<br>MMD / KS-test<br>Error analysis</div></div>
+    <div class="stage"><div class="node"></div><div class="n">02 / train</div><h3>Detection &amp; segmentation</h3><p>Pretrained detectors, segmentation and OCR wired into pipelines (Grounding DINO + SAM, in-house detectors at Hyperverge), and YOLOv8 training in my own projects.</p><div class="tools">PyTorch · YOLOv8<br>Grounding DINO · SAM<br>OpenCV · Scikit-Learn</div></div>
+    <div class="stage"><div class="node"></div><div class="n">03 / eval</div><h3>Mind the gap</h3><p>Production error analysis at Hyperverge, plus a gap metric and drift monitor I'm building (in progress).</p><div class="tools">FID / KID · DINOv2<br>MMD / KS-test<br>Error analysis</div></div>
     <div class="stage live"><div class="node"></div><div class="n">04 / serve</div><h3>Run it myself</h3><p>A home lab on Docker and Linux, with a local GPU for LLMs. It also serves this page.</p><div class="tools">Docker · Linux<br>Ollama · Cloudflare tunnels<br>Git</div></div>
   </div>
 </div></section>
@@ -250,13 +250,13 @@ footer a{color:var(--muted);text-decoration:none}
 <!-- WORK -->
 <section id="work"><div class="wrap">
   <div class="label">Selected work</div>
-  <h2 class="reveal">Results first.</h2>
-  <p class="intro reveal">Four projects, each led by what it changed.</p>
+  <h2 class="reveal">Selected work.</h2>
+  <p class="intro reveal">Four projects: what I built, and what it changed.</p>
   <div class="ledger">
     <article class="entry reveal">
-      <div class="res">~50%<small>FAR reduction</small></div>
-      <div><div class="meta">Hyperverge · Data Engineer Intern (DL) · 2024</div><h3>ID-card quality-check data</h3>
-        <p>~100K Blender-rendered samples covering blur, glare and partially visible cards, plus an occlusion pipeline for cases Blender couldn't simulate. Led annotation for the QC model and had vendors re-capture printed cards to close the synthetic-to-real gap. FRR also dropped ~12% (relative).</p></div>
+      <div class="res">~100K<small>synthetic samples</small></div>
+      <div><div class="meta">Hyperverge · Data Engineer Intern · 2024</div><h3>ID-card quality-check data</h3>
+        <p>Built a Blender-based pipeline generating ~100K samples of blur, glare and partially visible cards, plus an occlusion pipeline for cases Blender couldn't simulate. Led annotation for the ID-card QC model and had vendors re-capture printed cards to close the synthetic-to-real gap. Contributed to relative reductions of ~50% FAR and ~12% FRR in the overall quality-check pipeline.</p></div>
       <div class="tags"><span>Blender API</span><span>Compositing</span><span>OCR</span><span>Annotation QA</span></div>
     </article>
     <article class="entry reveal">
@@ -266,9 +266,9 @@ footer a{color:var(--muted);text-decoration:none}
       <div class="tags"><span>Photoshop API</span><span>Splicing</span><span>Pixel masks</span></div>
     </article>
     <article class="entry reveal">
-      <div class="res ongoing">Live<small>Aug 2026 – ongoing</small></div>
+      <div class="res ongoing">In progress<small>Aug 2026 – ongoing</small></div>
       <div><div class="meta">Personal project</div><h3>Synthetic-to-Real Domain Gap Detector</h3>
-        <p>Estimates how well synthetic training data will transfer before a full train/eval cycle. A config-driven render → train → eval pipeline over domain-randomized YCB-V variants, a no-training gap metric on DINOv2 features, and a drift monitor for incoming batches.</p></div>
+        <p>Goal: estimate how well synthetic training data will transfer to real detection before a full train/eval cycle. Built: a config-driven render → train → eval pipeline (BlenderProc, YOLOv8) over domain-randomized YCB-V variants. In progress: a no-training gap metric (FID / KID on DINOv2 features) and a drift monitor (MMD / KS-test). Results not yet published.</p></div>
       <div class="tags"><span>BlenderProc</span><span>YOLOv8</span><span>DINOv2</span><span>FID / KID</span></div>
     </article>
     <article class="entry reveal">
@@ -287,7 +287,7 @@ footer a{color:var(--muted);text-decoration:none}
   <div class="two" style="margin-top:48px">
     <div class="xp reveal">
       <div><span class="when">2025 – 2026</span><span><b>Concordia University, Montreal</b>Master of Applied Computer Science · 3.7/4.3</span></div>
-      <div><span class="when">2024</span><span><b>Hyperverge, Bangalore</b>Data Engineer Intern (DL) · Jan–Jun, Sep–Dec</span></div>
+      <div><span class="when">2024</span><span><b>Hyperverge, Bangalore</b>Data Engineer Intern · Jan–Jun, Sep–Dec</span></div>
       <div><span class="when">2023</span><span><b>Deft &amp; Tact Solutions, Hyderabad</b>Project Trainee (Development) · Apr–Oct</span></div>
       <div><span class="when">2020 – 2024</span><span><b>Kumaraguru College of Technology</b>B.E. Computer Science · 9.2/10 · Best Outgoing Student · Merit scholarship 2021–23</span></div>
     </div>
@@ -296,7 +296,7 @@ footer a{color:var(--muted);text-decoration:none}
       <div><span class="k">ML &amp; data</span><span class="v">PyTorch, Scikit-Learn, Pandas, NumPy, Matplotlib, Seaborn, data-centric AI</span></div>
       <div><span class="k">Vision</span><span class="v">OpenCV, YOLO, Grounding DINO, SAM, OCR pipelines, segmentation, perspective transforms</span></div>
       <div><span class="k">Synthetic data</span><span class="v">Blender Python API, Photoshop scripting, domain randomization, Albumentations</span></div>
-      <div><span class="k">Tools</span><span class="v">Git, Docker, Linux, Label Studio, Unsloth, AWS</span></div>
+      <div><span class="k">Tools</span><span class="v">Git, Docker, Linux, Label Studio, Unsloth, AWS (coursework)</span></div>
     </div>
   </div>
 </div></section>
@@ -306,7 +306,7 @@ footer a{color:var(--muted);text-decoration:none}
   <div>
     <div class="label">Home lab</div>
     <h2 class="reveal">I run <span>my own servers.</span></h2>
-    <p class="intro reveal" style="margin-bottom:0">Docker on Linux, Cloudflare tunnels and a local GPU. It's where I try things before they reach production: serving models, wiring agents to memory, and keeping it all up.</p>
+    <p class="intro reveal" style="margin-bottom:0">Docker on Linux, Cloudflare tunnels and a local GPU. It's where I try things out: hosting a local LLM, wiring AI agents to memory, and keeping services running.</p>
   </div>
   <div class="term reveal">
     <div class="bar"><i></i><i></i><i></i><span>deva@craftingtable</span></div>
