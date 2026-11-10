@@ -250,9 +250,15 @@ footer a{color:var(--muted);text-decoration:none}
 <!-- WORK -->
 <section id="work"><div class="wrap">
   <div class="label">Selected work</div>
-  <h2 class="reveal">Selected work.</h2>
-  <p class="intro reveal">Four projects: what I built, and what it changed.</p>
+  <h2 class="reveal">What I've built</h2>
+  <p class="intro reveal">Four projects: the problem, what I built, and where each one stands.</p>
   <div class="ledger">
+    <article class="entry reveal">
+      <div class="res ongoing">In progress<small>Aug 2026 – ongoing</small></div>
+      <div><div class="meta">Personal project</div><h3>Synthetic-to-Real Domain Gap Detector</h3>
+        <p>Goal: estimate how well synthetic training data will transfer to real detection before a full train/eval cycle. Built: a config-driven render → train → eval pipeline (BlenderProc, YOLOv8) over domain-randomized YCB-V variants. In progress: a no-training gap metric (FID / KID on DINOv2 features) and a drift monitor (MMD / KS-test). Results not yet published.</p></div>
+      <div class="tags"><span>BlenderProc</span><span>YOLOv8</span><span>DINOv2</span><span>FID / KID</span></div>
+    </article>
     <article class="entry reveal">
       <div class="res">~100K<small>synthetic samples</small></div>
       <div><div class="meta">Hyperverge · Data Engineer Intern · 2024</div><h3>ID-card quality-check data</h3>
@@ -264,12 +270,6 @@ footer a{color:var(--muted);text-decoration:none}
       <div><div class="meta">Hyperverge · 2024</div><h3>Synthetic ID-tamper dataset</h3>
         <p>Generation pipelines for a 5-class tamper dataset with pixel-level masks, using image splicing and Python-driven Photoshop automation, with per-sample configs logged so later model versions can reproduce it.</p></div>
       <div class="tags"><span>Photoshop API</span><span>Splicing</span><span>Pixel masks</span></div>
-    </article>
-    <article class="entry reveal">
-      <div class="res ongoing">In progress<small>Aug 2026 – ongoing</small></div>
-      <div><div class="meta">Personal project</div><h3>Synthetic-to-Real Domain Gap Detector</h3>
-        <p>Goal: estimate how well synthetic training data will transfer to real detection before a full train/eval cycle. Built: a config-driven render → train → eval pipeline (BlenderProc, YOLOv8) over domain-randomized YCB-V variants. In progress: a no-training gap metric (FID / KID on DINOv2 features) and a drift monitor (MMD / KS-test). Results not yet published.</p></div>
-      <div class="tags"><span>BlenderProc</span><span>YOLOv8</span><span>DINOv2</span><span>FID / KID</span></div>
     </article>
     <article class="entry reveal">
       <div class="res">Team of 3<small>led</small></div>
